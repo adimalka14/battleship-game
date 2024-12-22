@@ -26,5 +26,6 @@ export const GameSettings = {
     timeLimits: Object.values(TimeLimitForTurn),
     numberOfPlayers: Object.values(NumberOfPlayers),
     shipsConfigurations: ShipsConfigurations,
+    isMultiplayer: [true, false],
     defaultConfig: defaultGameConfig,
 };
