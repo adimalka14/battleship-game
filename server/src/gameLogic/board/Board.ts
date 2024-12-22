@@ -1,27 +1,20 @@
-import { Cell, CellContent } from './interfaces/Cell';
-import { Ship } from './Ship';
-import { Position } from './interfaces/Position';
-import { Attack } from './interfaces/Attack';
+import { Cell, CellContent } from './Cell';
+import { Ship } from '../ship/Ship';
+import { Position } from './Position';
+import { Attack } from '../attack/Attack';
+import { BoardSize} from '../consts';
 
 export class Board {
-    private readonly grid: Cell[][];
-    private readonly ships: Ship[] = [];
 
-    constructor(size: number) {
-        this.grid = this.createGrid(size);
-    }
-
-    get grid(): Cell[][] {
-        return this.grid;
-    }
-
-    private createGrid(size: number): Cell[][] {
-        return new Array(size).fill(null).map(() => new Array(size).fill(CellContent.EMPTY));
-    }
+    constructor(
+        public readonly boardSize : number = BoardSize.TEN,
+        public readonly ships: Ship[] = [],
+        public readonly grid: Cell[][] = this.createGrid(this.boardSize),
+    ) {}
 
     placeShip(ship: Ship): void {
         this.ships.push(ship);
-        ship.Positions.forEach(({ row, col }) =>
+        ship.positions.forEach(({ row, col }) =>
             this.grid[row][col] = { isRevealed: false, content: CellContent.SHIP });
     }
 
@@ -38,5 +31,9 @@ export class Board {
         if (cell.isRevealed) throw new Error("Cell already revealed");
 
         return cell.content;
+    }
+
+    private createGrid(size: number): Cell[][] {
+        return new Array(size).fill(null).map(() => new Array(size).fill(CellContent.EMPTY));
     }
 }

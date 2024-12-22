@@ -1,6 +1,6 @@
-import { Attack, AttackType } from "./interfaces/Attack";
-import { Cell } from './interfaces/Cell';
-import { Position } from './interfaces/Position';
+import { Attack, AttackType } from "./Attack";
+import { Cell } from '../board/Cell';
+import { Position } from '../board/Position';
 
 export const AttackRegistry: {[key in AttackType]: Attack} = {
     [AttackType.REGULAR]: {

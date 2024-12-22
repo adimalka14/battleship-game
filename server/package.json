@@ -1,4 +1,6 @@
 {
+  "author": "Adi Malka",
+  "license": "ISC",
   "name": "server",
   "version": "1.0.0",
   "description": "socket server for battleship game",
@@ -10,8 +12,9 @@
     "build:watch": "tsc -w",
     "test": "jest"
   },
-  "author": "Adi Malka",
-  "license": "ISC",
+  "dependencies": {
+    "uuid": "^11.0.3"
+  },
   "devDependencies": {
     "jest": "^29.7.0",
     "jest-html-reporters": "^3.1.7",

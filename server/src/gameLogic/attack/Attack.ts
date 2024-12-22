@@ -1,5 +1,5 @@
-import { Cell } from './Cell';
-import { Position } from './Position';
+import { Cell } from '../board/Cell';
+import { Position } from '../board/Position';
 
 export interface Attack {
     name: string;

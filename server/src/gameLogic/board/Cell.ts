@@ -1,4 +1,4 @@
-import { Attack } from "./Attack";
+import { Attack } from "../attack/Attack";
 
 export interface Cell {
     isRevealed: boolean;

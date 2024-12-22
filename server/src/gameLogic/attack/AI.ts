@@ -1,5 +1,5 @@
-import { Position } from "./interfaces/Position";
-import { Board } from "./Board";
+import { Position } from "../board/Position";
+import { Board } from "../board/Board";
 
 export function calculateMove(board: Board): Position {
     const validPositions: Position[] = [];
