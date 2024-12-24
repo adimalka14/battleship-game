@@ -1,0 +1,59 @@
+.board-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-row {
+  display: flex;
+}
+
+.board-cell {
+  width: 2em;
+  height: 2em;
+  border: 1px solid #999;
+  box-sizing: border-box;
+}
+
+.ship {
+  display: inline-block;
+  background-color: #22c;
+  border: 1px solid #000;
+}
+
+.ship-size-2 {
+  width: 4em;
+  height: 2em;
+}
+
+.ship-size-3 {
+  width: 6em;
+  height: 2em;
+}
+
+.ship-size-4 {
+  width: 8em;
+  height: 2em;
+}
+
+.ship-size-5 {
+  width: 10em;
+  height: 2em;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 90vh;
+  width: 95vw;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,41 @@
+.board-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.board-row {
+    display: flex;
+}
+
+.board-cell {
+    width: 2em;
+    height: 2em;
+    border: 1px solid #999;
+    box-sizing: border-box;
+}
+
+.ship {
+    display: inline-block;
+    background-color: #22c;
+    border: 1px solid #000;
+}
+
+.ship-size-2 {
+    width: calc(2 * 2em);
+    height: 2em;
+}
+
+.ship-size-3 {
+    width: calc(3 * 2em);
+    height: 2em;
+}
+
+.ship-size-4 {
+    width: calc(4 * 2em);
+    height: 2em;
+}
+
+.ship-size-5 {
+    width: calc(5 * 2em);
+    height: 2em;
+}

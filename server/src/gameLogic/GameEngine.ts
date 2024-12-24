@@ -33,8 +33,32 @@ export class GameEngine {
             !this.config.isMultiplayer;
     }
 
-    getGameData() {
-        return JSON.parse(JSON.stringify(this));
+    waitingPlayersCount(): number {
+        return this.players.length;
+    }
+
+    totalPlayersCount(): number {
+        return this.config.numOfPlayers;
+    }
+
+    getGameData(): GameData {
+        return {
+            gameId: this.gameId,
+            players: this.players.map(player => ({
+                id: player.id,
+                name: player.name,
+                board: player.board?.grid,
+                ships: player.board?.ships?.map(ship => ({
+                    positions: ship.positions,
+                    hits: ship.hits,
+                })),
+            })),
+            currentTurn: this.players[this.currentTurn]?.id,
+            config: this.config,
+            state: this.gameState,
+            waitingPlayers: this.waitingPlayersCount(),
+            totalPlayers: this.totalPlayersCount(),
+        };
     }
 
     private nextTurn() {

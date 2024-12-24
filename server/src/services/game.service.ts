@@ -3,6 +3,7 @@ import { GameSettings } from "../gameLogic/GameConfig";
 import { GameConfig } from '../gameLogic/GameConfig';
 import { Player } from '../gameLogic/player/Player';
 import { v4 as uuid_v4 } from "uuid";
+import { GameData, GameState } from '../gameLogic/GameState';
 
 const activeGames = new Map<string, GameEngine>();
 const waitingGames: GameEngine[] = [];
@@ -10,7 +11,7 @@ const players = new Map<string, Player>();
 
 export const gameSettings = GameSettings
 
-export const joinGame = (metadata):string => {
+export const joinGame = (metadata: any):GameData => {
     const { playerQuery, gameConfig } = metadata;
     const player = getPlayer(playerQuery);
     const game = findAvailableGame(gameConfig as GameConfig);
@@ -23,10 +24,10 @@ export const joinGame = (metadata):string => {
         game.init();
     }
 
-    return game.gameId;
+    return game.getGameData();
 }
 
-function getPlayer(playerQuery) : Player {
+function getPlayer(playerQuery : any) : Player {
     const id = playerQuery.id || uuid_v4();
 
     if (players.has(id)) {

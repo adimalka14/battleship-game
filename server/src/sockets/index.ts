@@ -3,7 +3,7 @@ import gameSocketHandler from './game.socket';
 
 export default function setupSockets(io: SocketIOServer) {
     io.on('connection', (socket:Socket) =>{
-        console.log('a user connected');
+        console.log(`a user connected, ${socket.id}`);
 
         gameSocketHandler(io, socket);
 

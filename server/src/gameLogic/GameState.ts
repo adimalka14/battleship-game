@@ -7,15 +7,17 @@ export interface GameData {
     players: {
         id: string;
         name: string;
-        board: Cell[][];
+        board: Cell[][] | undefined;
         ships: {
             positions: Position[];
             hits: Position[];
-        }[];
+        }[] | undefined;
     }[];
-    currentTurn: string;
+    currentTurn: string | undefined;
     config: GameConfig;
     state: GameState;
+    totalPlayers: number;
+    waitingPlayers: number;
 }
 
 export enum GameState {

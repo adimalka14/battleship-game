@@ -1,0 +1,17 @@
+@use "screens/setupBoard";
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 90vh;
+  width: 95vw;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}

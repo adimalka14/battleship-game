@@ -17,7 +17,9 @@ export class Player {
         if (!this.attacks.has(attack)) {
             this.attacks.set(attack, limit);
         }else {
-            this.attacks.set(attack, this.attacks.get(attack) + limit);
+            const currentLimit = this.attacks.get(attack)!;
+            if(currentLimit !== undefined)
+                this.attacks.set(attack, currentLimit + limit);
         }
     }
 }

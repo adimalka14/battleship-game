@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src/**/*.ts"
+  ],
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "events": {
+    "restart": "npx kill-port 3000"
+  }
+}
