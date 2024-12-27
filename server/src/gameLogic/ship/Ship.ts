@@ -5,7 +5,7 @@ export class Ship {
     constructor(
         public length: number,
         public positions: Position[] = [],
-        public hits: Position[] = []
+        public hits: boolean[] = new Array(positions.length).fill(false)
     ) {}
 
     addPosition(position: Position) : void {
@@ -13,7 +13,7 @@ export class Ship {
     }
 
     addHit(position: Position) : void {
-        this.hits.push(position);
+        this.hits[this.positions.indexOf(position)] = true;
     }
 
     isSunk() : boolean {

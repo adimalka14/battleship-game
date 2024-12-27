@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { IDS } from '../utils/constants';
 import { emitEvent, onEvent } from '../utils/socket';
 import { EVENTS } from '../utils/constants';
-import storage from '../utils/storage';
+import STORAGE from '../utils/storage';
 import { renderSetupBoardScreen } from './setupBoard.screen';
 
 export const renderFindOpponentScreen = () => {
@@ -19,7 +19,7 @@ const bindEvents = () => {
         playerQuery: {
             name: localStorage.getItem('username'),
         },
-        gameConfig: storage.gameConfig,
+        gameConfig: STORAGE.gameConfig,
     });
 
     onEvent(EVENTS.PLAYER_JOINED, (data: any) => {

@@ -24,7 +24,7 @@ export const joinGame = (metadata: any):GameData => {
         game.init();
     }
 
-    return game.getGameData();
+    return game.getGameData(player.id);
 }
 
 function getPlayer(playerQuery : any) : Player {

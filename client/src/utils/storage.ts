@@ -1,7 +1,11 @@
+import { Ship } from '../interfaces/Ship';
 
-const storage = {
-    gameConfig: {},
-    username: '',
+interface Storage {
+    gameConfig?: any;
+    username?: string;
+    ships?: Ship[];
 }
 
-export default storage
+const STORAGE: Storage = {};
+
+export default STORAGE;

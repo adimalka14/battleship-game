@@ -41,24 +41,36 @@ export class GameEngine {
         return this.config.numOfPlayers;
     }
 
-    getGameData(): GameData {
+    getGameData(playerId: string): GameData {
+        const player = this.players.find(player => player.id === playerId);
+
+        const playerData = {
+            id: player?.id || '',
+            name: player?.name || '',
+            board: player?.board?.grid || undefined,
+            ships: player?.board?.ships?.map(ship => ({
+                positions: ship.positions,
+                hits: ship.hits,
+            })) || [],
+        };
+
+        const enemiesData = this.players
+            .filter(p => p.id !== playerId)
+            .map(enemy => ({
+                name: enemy.name || '',
+                board: enemy.board?.grid || undefined,
+            }));
+
         return {
             gameId: this.gameId,
-            players: this.players.map(player => ({
-                id: player.id,
-                name: player.name,
-                board: player.board?.grid,
-                ships: player.board?.ships?.map(ship => ({
-                    positions: ship.positions,
-                    hits: ship.hits,
-                })),
-            })),
+            player: playerData,
+            enemies: enemiesData,
             currentTurn: this.players[this.currentTurn]?.id,
             config: this.config,
             state: this.gameState,
             waitingPlayers: this.waitingPlayersCount(),
             totalPlayers: this.totalPlayersCount(),
-        };
+        } as GameData;
     }
 
     private nextTurn() {

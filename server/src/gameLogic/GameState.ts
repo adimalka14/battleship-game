@@ -4,15 +4,19 @@ import { Position } from './board/Position';
 
 export interface GameData {
     gameId: string;
-    players: {
+    player: {
         id: string;
         name: string;
         board: Cell[][] | undefined;
         ships: {
             positions: Position[];
-            hits: Position[];
+            hits: boolean[];
         }[] | undefined;
-    }[];
+    };
+    enemies:{
+        name: string;
+        board: Cell[][] | undefined;
+    }
     currentTurn: string | undefined;
     config: GameConfig;
     state: GameState;

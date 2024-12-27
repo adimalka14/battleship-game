@@ -4,7 +4,6 @@ import { GameData } from '../gameLogic/GameState';
 
 export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
 
-
     socket.on('clientConnected', () => {
         socket.emit('availableSettings', gameSettings);
     });
@@ -20,3 +19,4 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
         io.to(data.room).emit('updateBoard', data);
     });
 }
+

@@ -3,7 +3,7 @@ import { IDS } from '../utils/constants';
 import { connectSocket, emitEvent, onEvent } from '../utils/socket';
 import { EVENTS } from '../utils/constants';
 import { renderFindOpponentScreen } from './findOpponent.screen';
-import storage from '../utils/storage';
+import STORAGE from '../utils/storage';
 
 const computerBtn = 'computer';
 const computerBtnID = `#${computerBtn}`;
@@ -28,14 +28,14 @@ const bindEvents = () => {
 
     onEvent(EVENTS.AVAILABLE_SETTINGS, (data: any) => {
         console.log('availableSettings', data);
-        storage.gameConfig = data.defaultConfig;
+        STORAGE.gameConfig = data.defaultConfig;
     });
 };
 
 const joinGame = (isMultiplayer: boolean): void => {
-    storage.gameConfig['isMultiplayer'] = isMultiplayer;
+    STORAGE.gameConfig['isMultiplayer'] = isMultiplayer;
 
-    console.log(storage.gameConfig);
+    console.log(STORAGE.gameConfig);
 
     renderFindOpponentScreen();
 };
