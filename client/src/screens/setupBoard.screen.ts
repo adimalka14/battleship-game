@@ -70,8 +70,6 @@ function initShipsWithRotation() {
         const shipState = STORAGE.SHIPS as Ship[];
         const ship: Ship | undefined = shipState.find((ship) => ship.id === shipId);
 
-        console.log(ship);
-
         if (!ship) {
             console.error('Ship not found');
             return;
@@ -86,47 +84,26 @@ function initShipsWithRotation() {
 
         if (currentDirection === Direction.VERTICAL) {
             newRow = Math.max(0, currRow + clickIndex);
-            newCol = currRow - clickIndex;
+            newCol = currCol - (shipArea - clickIndex - 1);
+            newCol = Math.max(0, Math.min(newCol, BOARD_SIZE - shipArea));
         } else {
             newRow = Math.max(0, currRow - clickIndex);
             newCol = currCol + clickIndex;
+            newRow = Math.max(0, Math.min(newRow, BOARD_SIZE - shipArea));
         }
-
-        newRow = Math.max(0, Math.min(newRow, 10 - shipArea));
-        newCol = Math.max(0, Math.min(newCol, 10 - shipArea));
 
         ship.startPosition = { row: newRow, col: newCol };
 
         $ship.data('direction', newDirection);
         renderShipsOnBoard(STORAGE.SHIPS as Ship[], true);
         initShipsWithRotation();
-
-        console.log(`Ship rotated to: ${newDirection}, New head at (${newRow}, ${newCol})`);
+        // console.log(`prev placement: ${currentDirection}, New head at (${currRow}, ${currCol})`);
+        // console.log(`new placement: ${newDirection}, New head at (${newRow}, ${newCol})`);
     });
 }
 
 const bindEvents = () => {
     initShipsWithRotation();
-    // $('.board-container').on('click', '.ship', function (e) {
-    //     const $ship = $(this);
-    //     const shipId = $ship.data('ship-id');
-    //     const direction = $ship.data('direction');
-    //
-    //     const newDirection = direction === Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
-    //     const shipsState = STORAGE.SHIPS as Ship[];
-    //     const shipIndex = shipsState?.findIndex((s) => s.id === shipId);
-    //
-    //     if (shipIndex !== -1) {
-    //         shipsState[shipIndex].direction = newDirection;
-    //     }
-    //
-    //     renderShipsOnBoard(shipsState, true);
-    //     makeShipsDraggable();
-    // });
-
-    // $('.board-container').on('dragover', function (e) {
-    //     e.preventDefault();
-    // });
 
     $('#start-btn').on('click', () => {
         const shipsToSend: Position[][] = STORAGE?.SHIPS?.map((ship) => convertShipToServerFormat(ship)) || [];
