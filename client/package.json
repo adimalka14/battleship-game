@@ -12,11 +12,15 @@
   "author": "Adi Malka",
   "license": "ISC",
   "dependencies": {
+    "interactjs": "^1.10.27",
     "jquery": "^3.7.1",
+    "jquery-ui": "^1.14.1",
+    "jquery-ui-rotatable": "^1.1.0",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.32",
+    "@types/jqueryui": "^1.12.23",
     "live-server": "^1.2.2",
     "prettier": "^3.4.2",
     "sass": "^1.83.0",

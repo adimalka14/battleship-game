@@ -11,12 +11,12 @@ export interface GameData {
         ships: {
             positions: Position[];
             hits: boolean[];
-        }[] | undefined;
+        } | undefined;
     };
     enemies:{
         name: string;
         board: Cell[][] | undefined;
-    }
+    }[];
     currentTurn: string | undefined;
     config: GameConfig;
     state: GameState;

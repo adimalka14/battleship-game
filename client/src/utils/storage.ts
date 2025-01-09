@@ -1,9 +1,9 @@
 import { Ship } from '../interfaces/Ship';
 
 interface Storage {
-    gameConfig?: any;
-    username?: string;
-    ships?: Ship[];
+    GAME_CONFIG?: any;
+    USERNAME?: string;
+    SHIPS?: Ship[];
 }
 
 const STORAGE: Storage = {};

@@ -1,7 +1,7 @@
-import { Player } from "./player/Player";
+import { Player } from './player/Player';
 import { GameData, GameState } from './GameState';
 import { defaultGameConfig, GameConfig } from './GameConfig';
-import { v4 as uuid_v4 } from "uuid";
+import { v4 as uuid_v4 } from 'uuid';
 
 export class GameEngine {
     constructor(
@@ -9,28 +9,25 @@ export class GameEngine {
         public readonly players: Player[] = [],
         public readonly gameId: string = uuid_v4(),
         public gameState: GameState = GameState.WAITING_FOR_PLAYERS,
-        public currentTurn: number = 0,
+        public currentTurn: number = 0
     ) {}
 
     init() {
         this.gameState = GameState.IN_PROGRESS;
     }
 
-    makeMove() {
+    makeMove() {}
 
-    }
-
-    addPlayer(player: Player) : void {
+    addPlayer(player: Player): void {
         this.players.push(player);
     }
 
-    removePlayer(player: Player) : void {
+    removePlayer(player: Player): void {
         this.players.splice(this.players.indexOf(player), 1);
     }
 
-    isFull() : boolean {
-        return this.players.length === this.config.numOfPlayers ||
-            !this.config.isMultiplayer;
+    isFull(): boolean {
+        return this.players.length === this.config.numOfPlayers || !this.config.isMultiplayer;
     }
 
     waitingPlayersCount(): number {
@@ -42,24 +39,24 @@ export class GameEngine {
     }
 
     getGameData(playerId: string): GameData {
-        const player = this.players.find(player => player.id === playerId);
+        const player = this.players.find((player) => player.id === playerId);
 
         const playerData = {
             id: player?.id || '',
             name: player?.name || '',
-            board: player?.board?.grid || undefined,
-            ships: player?.board?.ships?.map(ship => ({
+            board: player?.getBoardForPlayer(this.config.boardSize),
+            ships: player?.ships?.map((ship) => ({
                 positions: ship.positions,
                 hits: ship.hits,
-            })) || [],
-        };
+            })),
+        } as GameData['player'];
 
         const enemiesData = this.players
-            .filter(p => p.id !== playerId)
-            .map(enemy => ({
+            .filter((p) => p.id !== playerId)
+            .map((enemy) => ({
                 name: enemy.name || '',
-                board: enemy.board?.grid || undefined,
-            }));
+                board: enemy.getBoardForEnemy(this.config.boardSize),
+            })) as GameData['enemies'];
 
         return {
             gameId: this.gameId,

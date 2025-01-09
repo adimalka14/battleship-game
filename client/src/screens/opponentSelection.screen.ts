@@ -28,14 +28,14 @@ const bindEvents = () => {
 
     onEvent(EVENTS.AVAILABLE_SETTINGS, (data: any) => {
         console.log('availableSettings', data);
-        STORAGE.gameConfig = data.defaultConfig;
+        STORAGE.GAME_CONFIG = data.defaultConfig;
     });
 };
 
 const joinGame = (isMultiplayer: boolean): void => {
-    STORAGE.gameConfig['isMultiplayer'] = isMultiplayer;
+    STORAGE.GAME_CONFIG['isMultiplayer'] = isMultiplayer;
 
-    console.log(STORAGE.gameConfig);
+    console.log(STORAGE.GAME_CONFIG);
 
     renderFindOpponentScreen();
 };

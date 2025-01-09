@@ -17,9 +17,9 @@ export const renderFindOpponentScreen = () => {
 const bindEvents = () => {
     emitEvent(EVENTS.JOIN_GAME, {
         playerQuery: {
-            name: localStorage.getItem('username'),
+            name: STORAGE.USERNAME,
         },
-        gameConfig: STORAGE.gameConfig,
+        gameConfig: STORAGE.GAME_CONFIG,
     });
 
     onEvent(EVENTS.PLAYER_JOINED, (data: any) => {

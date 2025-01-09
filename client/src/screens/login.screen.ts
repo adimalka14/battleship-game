@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { IDS } from '../utils/constants';
-import { connectSocket } from '../utils/socket';
+import { connectSocket, onEvent } from '../utils/socket';
 import { renderOpponentSelectionScreen } from './opponentSelection.screen';
 import STORAGE from '../utils/storage';
 
@@ -19,8 +19,13 @@ export const renderLoginScreen = () => {
 
 const bindEvents = () => {
     $(startBtnID).on('click', () => {
-        STORAGE.username = $(`#username`).val() as string;
+        STORAGE.USERNAME = $(`#username`).val() as string;
         connectSocket();
+
+        onEvent('error', (data: any) => {
+            console.log(data);
+        });
+
         renderOpponentSelectionScreen();
     });
 };

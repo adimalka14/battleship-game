@@ -1,54 +1,71 @@
 .board-container {
-    display: flex;
-    flex-direction: column;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
 }
 
-.board-row {
-    display: flex;
+.cells-layer {
+  display: grid;
+  grid-template-columns: repeat(10, 2em);
+  grid-template-rows: repeat(10, 2em);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.ship-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .board-cell {
-    width: 2em;
-    height: 2em;
-    border: 1px solid #999;
-    box-sizing: border-box;
+  border: 1px solid #999;
+  box-sizing: border-box;
 }
 
-.ship-placed {
-    background-color: green;
-    color: white;
-}
-
-.options-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 1em;
+.board-row {
+  display: contents;
 }
 
 .ship {
-    display: inline-block;
-    background-color: #22c;
-    border: 1px solid #000;
+  position: absolute !important;
+  z-index: 10;
+  border: 1px solid #000;
+  box-sizing: border-box;
+
+  @mixin ship($area, $color) {
+    &.ship-area-#{$area} {
+      width: calc($area * 2em);
+      height: 2em;
+      background-color: $color;
+    }
+  }
+
+  @include ship(1, red);
+  @include ship(2, blue);
+  @include ship(3, yellow);
+  @include ship(4, green);
+  @include ship(5, purple);
 }
 
-.ship-size-2 {
-    width: calc(2 * 2em);
-    height: 2em;
+.game-board.waiting {
+  filter: blur(5px);
 }
 
-.ship-size-3 {
-    width: calc(3 * 2em);
-    height: 2em;
+.game-message {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 4em;
+
+  &.hide{
+    display: none;
+  }
 }
 
-.ship-size-4 {
-    width: calc(4 * 2em);
-    height: 2em;
-}
-
-.ship-size-5 {
-    width: calc(5 * 2em);
-    height: 2em;
-}

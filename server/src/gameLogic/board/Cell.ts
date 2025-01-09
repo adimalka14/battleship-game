@@ -1,12 +1,6 @@
 import { Attack } from "../attack/Attack";
 
-export interface Cell {
-    isRevealed: boolean;
-    content: CellContent;
-    specialAttack?: Attack;
-}
-
-export enum CellContent {
+export enum Cell {
     EMPTY = "EMPTY",
     SHIP = "SHIP",
     HIT_SHIP = "HIT_SHIP",
