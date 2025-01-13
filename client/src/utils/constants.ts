@@ -13,4 +13,5 @@ export const EVENTS = {
     UPDATE_BOARD: 'updateBoard',
     PLAYER_SHOOT: 'playerShoot',
     ATTACK_RESULT: 'attackResult',
+    GAME_FINISHED: 'gameFinished',
 };

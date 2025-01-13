@@ -1,4 +1,4 @@
-import { Player } from './player/Player';
+import { Player, PlayerStatus } from './player/Player';
 import { GameData, GameState } from './GameState';
 import { Position } from './board/Position';
 import { defaultGameConfig, GameConfig } from './GameConfig';
@@ -27,6 +27,8 @@ export class GameEngine {
         if (result === AttackResult.MISS) {
             this.nextTurn();
         }
+
+        this.updateIfWin();
 
         return result;
     }
@@ -57,6 +59,7 @@ export class GameEngine {
         const playerData = {
             id: player?.id || '',
             name: player?.name || '',
+            status: player?.status,
             board: player?.getBoard(this.config.boardSize, true),
             ships: player?.ships?.map((ship) => ({
                 positions: ship.positions,
@@ -69,7 +72,9 @@ export class GameEngine {
             .map((enemy) => ({
                 id: enemy.id,
                 name: enemy.name || '',
+                status: enemy.status,
                 board: enemy.getBoard(this.config.boardSize, false),
+                sunkShips: enemy.ships?.filter((ship) => ship.isSunk()).map((ship) => ship.positions),
             })) as GameData['enemies'];
 
         return {
@@ -85,10 +90,22 @@ export class GameEngine {
     }
 
     playerIdTurn(): string {
-        return this.players[this.currentTurn].id;
+        return this.players[this.currentTurn]?.id || '';
     }
 
     private nextTurn() {
         this.currentTurn = (this.currentTurn + 1) % this.players.length;
+    }
+
+    private updateIfWin() {
+        const stillPlaying: Player[] = this.players.filter(
+            (p) => !(p.status === PlayerStatus.LOOSER || p.status === PlayerStatus.RETIRED)
+        );
+
+        if (stillPlaying.length === 1) {
+            stillPlaying[0].status = PlayerStatus.WINNER;
+            this.gameState = GameState.FINISHED;
+            this.currentTurn = -1;
+        }
     }
 }

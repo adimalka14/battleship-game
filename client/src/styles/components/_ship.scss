@@ -1,0 +1,33 @@
+.ship-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ship {
+  position: absolute !important;
+  z-index: 10;
+  border: 1px solid #000;
+  box-sizing: border-box;
+
+  @mixin ship($area, $color) {
+    &.ship-area-#{$area} {
+      width: calc($area * 2em);
+      height: 2em;
+      background-color: $color;
+    }
+  }
+
+  @include ship(1, red);
+  @include ship(2, blue);
+  @include ship(3, yellow);
+  @include ship(4, green);
+  @include ship(5, purple);
+
+  &[data-overlapping="true"] {
+    border: 3px solid rgba(255, 60, 60, 0.98);
+    opacity: 0.3;
+  }
+}

@@ -33,7 +33,11 @@ const bindEvents = () => {
 };
 
 const joinGame = (isMultiplayer: boolean): void => {
-    STORAGE.GAME_CONFIG['isMultiplayer'] = isMultiplayer;
+    try {
+        STORAGE.GAME_CONFIG['isMultiplayer'] = isMultiplayer;
+    } catch (error) {
+        console.log(error);
+    }
 
     console.log(STORAGE.GAME_CONFIG);
 

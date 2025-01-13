@@ -3,7 +3,7 @@ import { v4 as uuid_v4 } from 'uuid';
 import { GameEngine } from '../gameLogic/GameEngine';
 import { GameSettings } from '../gameLogic/GameConfig';
 import { GameConfig } from '../gameLogic/GameConfig';
-import { Player } from '../gameLogic/player/Player';
+import { Player, PlayerStatus } from '../gameLogic/player/Player';
 import { Ship } from '../gameLogic/ship/Ship';
 import { Position } from '../gameLogic/board/Position';
 import { GameData, GameState } from '../gameLogic/GameState';
@@ -27,13 +27,14 @@ export const getPlayerID = (token: string, createIfNotExist = false): string | n
     return createIfNotExist ? createPlayerID(token) : null;
 };
 
-export const createPlayerID = (token: string): string => {
+const createPlayerID = (token: string): string => {
     const playerId = uuid_v4();
     tokensToPlayers.set(token, playerId);
     return playerId;
 };
 
 export const setPlayerToSocket = (playerId: string, socketId: string) => playersToSockets.set(playerId, socketId);
+export const getSocketID = (playerId: string) => playersToSockets.get(playerId);
 
 export const joinGame = (metadata: any): GameData => {
     const { playerQuery, gameConfig } = metadata;
@@ -57,7 +58,7 @@ export const playerReady = (playerId: string, data: Position[][]): boolean => {
     if (!player) return false;
 
     player.ships = data.map((positions) => new Ship(positions));
-    player.isReady = true;
+    player.status = PlayerStatus.WAITING;
     return true;
 };
 
@@ -65,10 +66,21 @@ export const allPlayersReady = (gameId: string): { allReady: boolean; readyCount
     const game = activeGames.get(gameId);
     if (!game) return { allReady: false, readyCount: 0 };
 
-    const readyCount = game.players.filter((player) => player.isReady).length;
+    const readyCount = game.players.filter((player) => player.status === PlayerStatus.WAITING).length;
     const allReady = readyCount === game.players.length;
 
+    allReady &&
+        game.players.forEach((player) => {
+            player.status = PlayerStatus.PLAYING;
+        });
+
     return { allReady, readyCount };
+};
+
+export const getAllGamePlayers = (gameId: string): string[] => {
+    const game = activeGames.get(gameId);
+
+    return game ? game.players.map((player) => player.id) : [];
 };
 
 export const getGameData = (gameId: string, playerId: string): GameData => {
@@ -85,6 +97,26 @@ export const makeMove = (gameId: string, attackerId: string, attactedId: string,
     if (game.playerIdTurn() !== attackerId) throw Error('not your turn');
 
     return game.makeMove(attactedId, position);
+};
+
+export const isGameFinished = (gameId: string): boolean => {
+    const game = activeGames.get(gameId);
+    if (!game) throw Error('game not found');
+
+    return game ? game.gameState === GameState.FINISHED : false;
+};
+
+export const deleteGame = (gameId: string): void => {
+    const game = activeGames.get(gameId);
+
+    if (!game) return;
+
+    game.players.forEach((player) => {
+        player.reset();
+        playerToGameId.delete(player.id);
+    });
+
+    activeGames.delete(gameId);
 };
 
 function getPlayer(playerQuery: any): Player {

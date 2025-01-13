@@ -1,12 +1,14 @@
 import { GameConfig } from './GameConfig';
 import { Cell } from './board/Cell';
 import { Position } from './board/Position';
+import { PlayerStatus } from './player/Player';
 
 export interface GameData {
     gameId: string;
     player: {
         id: string;
         name: string;
+        status: PlayerStatus;
         board: Cell[][] | undefined;
         ships:
             | {
@@ -18,7 +20,9 @@ export interface GameData {
     enemies: {
         id: string;
         name: string;
+        status: PlayerStatus;
         board: Cell[][] | undefined;
+        sunkShips: Position[][];
     }[];
     currentTurn: string | undefined;
     config: GameConfig;

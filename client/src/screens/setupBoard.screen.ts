@@ -141,6 +141,6 @@ const bindEvents = () => {
 
     onEvent(EVENTS.ALL_PLAYERS_READY, (data: any) => {
         console.log(data);
-        renderGameScreen();
+        renderGameScreen(data);
     });
 };
