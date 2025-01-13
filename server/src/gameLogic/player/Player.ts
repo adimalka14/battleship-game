@@ -1,7 +1,8 @@
-import { AttackType } from '../attack/Attack';
+import { AttackResult, AttackType } from '../attack/Attack';
 import { v4 as uuid_v4 } from 'uuid';
 import { Ship } from '../ship/Ship';
 import { Cell } from '../board/Cell';
+import { Position } from '../board/Position';
 
 const DEFAULT_SHIP_COUNT = 5;
 
@@ -12,15 +13,59 @@ export class Player {
         public isComputer: boolean = false,
         public isReady: boolean = false,
         private readonly _ships: Ship[] = [],
+        private revealedPositions: Set<string> = new Set(),
         public readonly attacks: Map<AttackType, number> = new Map([[AttackType.REGULAR, Infinity]])
     ) {}
 
-    getBoardForPlayer(boardSize: number): Cell[][] {
-        return new Array(boardSize).fill(null).map(() => new Array(boardSize).fill(Cell.EMPTY));
+    beingAttacked(position: Position): AttackResult {
+        console.log(this.revealedPositions);
+        if (this.isPositionRevealed(position)) throw new Error('Position already revealed');
+
+        this.revealPosition(position);
+
+        for (const ship of this._ships) {
+            for (let i = 0; i < ship.positions.length; i++) {
+                const { row: x, col: y } = ship.positions[i];
+                if (position.row === x && position.col === y) {
+                    ship.hits[i] = true;
+                    return ship.isSunk() ? AttackResult.SUNK : AttackResult.HIT;
+                }
+            }
+        }
+        return AttackResult.MISS;
     }
 
-    getBoardForEnemy(boardSize: number): Cell[][] {
-        return new Array(boardSize).fill(null).map(() => new Array(boardSize).fill(Cell.EMPTY));
+    revealPosition(position: Position): void {
+        this.revealedPositions.add(`${position.row},${position.col}`);
+    }
+
+    isPositionRevealed(position: Position): boolean {
+        return this.revealedPositions.has(`${position.row},${position.col}`);
+    }
+
+    getBoard(boardSize: number, isPlayer: boolean): Cell[][] {
+        const board = new Array(boardSize)
+            .fill(null)
+            .map(() => new Array(boardSize).fill(isPlayer ? Cell.EMPTY : Cell.NOT_REVEALED));
+
+        for (const position of this.revealedPositions) {
+            const [y, x] = position.split(',').map(Number);
+            board[y][x] = Cell.EMPTY;
+        }
+
+        for (const ship of this._ships) {
+            for (let i = 0; i < ship.positions.length; i++) {
+                const { row: x, col: y } = ship.positions[i];
+                if (ship.isSunk()) {
+                    board[x][y] = Cell.SUNK_SHIP;
+                } else if (ship.hits[i]) {
+                    board[x][y] = Cell.HIT_SHIP;
+                } else if (isPlayer) {
+                    board[x][y] = Cell.SHIP;
+                }
+            }
+        }
+        return board;
     }
 
     get ships(): Ship[] {

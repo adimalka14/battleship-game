@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { Cell } from '../interfaces/Cell';
 import STORAGE from '../utils/storage';
 import { Ship } from '../interfaces/Ship';
-import { createShipElement } from './ship';
+import { createShipElement, isShipOverlapping } from './ship';
 
 let BOARD_SIZE = (STORAGE?.GAME_CONFIG?.boardSize as number) || 10;
 const EMPTY_BOARD = new Array(BOARD_SIZE).fill(Cell.EMPTY).map(() => new Array(BOARD_SIZE).fill(Cell.EMPTY));
@@ -35,4 +35,15 @@ export function renderShipsOnBoard(ships: Ship[], draggable: boolean = false) {
 
 export function getCellSize() {
     return parseFloat($('.board-cell').css('width'));
+}
+
+export function isBoardIllegal(ships: Ship[]): boolean {
+    for (let i = 0; i < ships.length; i++) {
+        for (let j = i + 1; j < ships.length; j++) {
+            if (isShipOverlapping(ships[i], ships[j])) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

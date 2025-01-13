@@ -18,24 +18,35 @@ export function defineShips(shipsConfig: any[]): Ship[] {
 
     return ships;
 }
-// export function createShipElement(ship: Ship, cellSize: number, draggable: boolean): JQuery<HTMLElement> {
-//     const { row, col } = ship.startPosition;
-//     const containerOffset = $('.board-container').offset() || { top: 0, left: 0 };
-//
-//     const topPx = row * cellSize + containerOffset.top;
-//     const leftPx = col * cellSize + containerOffset.left;
-//
-//     return $('<div>', {
-//         class: `ship ship-area-${ship.area}`,
-//         css: {
-//             top: `${topPx}px`,
-//             left: `${leftPx}px`,
-//             width: ship.direction === Direction.HORIZONTAL ? ship.area * cellSize : cellSize,
-//             height: ship.direction === Direction.VERTICAL ? ship.area * cellSize : cellSize,
-//         },
-//         draggable: draggable,
-//     });
-// }
+
+export function findShipById(ships: Ship[], id: string): Ship | undefined {
+    return ships.find((ship) => ship.id === id);
+}
+
+export function updateShip(ship: Ship, startPosition: Position, direction: Direction | undefined = undefined) {
+    ship.startPosition = startPosition;
+    if (direction !== undefined) ship.direction = direction;
+}
+
+export function flipShip(ship: Ship, clickIndex: number, boardSize: number): void {
+    const { row: currRow, col: currCol } = ship.startPosition;
+    const currentDirection = ship.direction;
+    const shipArea = ship.area;
+
+    if (currentDirection === Direction.VERTICAL) {
+        ship.startPosition = {
+            row: Math.max(0, currRow + clickIndex),
+            col: Math.max(0, Math.min(currCol - (shipArea - clickIndex - 1), boardSize - shipArea)),
+        };
+        ship.direction = Direction.HORIZONTAL;
+    } else {
+        ship.startPosition = {
+            row: Math.max(0, Math.min(Math.max(0, currRow - clickIndex), boardSize - shipArea)),
+            col: currCol + clickIndex,
+        };
+        ship.direction = Direction.VERTICAL;
+    }
+}
 
 export function createShipElement(ship: Ship, cellSize: number, draggable: boolean): JQuery<HTMLElement> {
     const { row, col } = ship.startPosition;
@@ -136,4 +147,48 @@ export function convertShipToServerFormat(ship: Ship): Position[] {
     }
 
     return positions;
+}
+
+export function updateAllShipsOverlap(ships: Ship[]) {
+    $('.ship').attr('data-overlapping', 'false').css('background-color', '');
+
+    ships.forEach((shipA) => {
+        const overlapping = ships.some((shipB) => {
+            if (shipA.id === shipB.id) return false;
+            return isShipOverlapping(shipA, shipB);
+        });
+
+        const $shipElement = $(`[data-ship-id="${shipA.id}"]`);
+        if (overlapping) {
+            $shipElement.attr('data-overlapping', 'true');
+        } else {
+            $shipElement.attr('data-overlapping', 'false');
+        }
+    });
+}
+
+export function isShipOverlapping(shipA: Ship, shipB: Ship): boolean {
+    if (!shipA.startPosition || !shipB.startPosition) {
+        return false;
+    }
+
+    const shipACells: Position[] = [];
+    for (let i = 0; i < shipA.area; i++) {
+        shipACells.push(
+            shipA.direction === Direction.HORIZONTAL
+                ? { row: shipA.startPosition.row, col: shipA.startPosition.col + i }
+                : { row: shipA.startPosition.row + i, col: shipA.startPosition.col }
+        );
+    }
+
+    const shipBCells: Position[] = [];
+    for (let i = 0; i < shipB.area; i++) {
+        shipBCells.push(
+            shipB.direction === Direction.HORIZONTAL
+                ? { row: shipB.startPosition.row, col: shipB.startPosition.col + i }
+                : { row: shipB.startPosition.row + i, col: shipB.startPosition.col }
+        );
+    }
+
+    return shipACells.some((cellA) => shipBCells.some((cellB) => cellA.row === cellB.row && cellA.col === cellB.col));
 }

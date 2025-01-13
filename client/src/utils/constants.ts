@@ -10,5 +10,7 @@ export const EVENTS = {
     PLAYER_READY: 'playerReady',
     ALL_PLAYERS_READY: 'allPlayersReady',
     GET_GAME_DATA: 'getGameData',
-    GAME_DATA: 'gameData',
+    UPDATE_BOARD: 'updateBoard',
+    PLAYER_SHOOT: 'playerShoot',
+    ATTACK_RESULT: 'attackResult',
 };

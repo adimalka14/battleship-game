@@ -8,8 +8,14 @@ export interface Attack {
 }
 
 export enum AttackType {
-    REGULAR = "REGULAR",
-    PLUS = "PLUS",
-    SCATTER = "SCATTER",
-    NUKED = "NUKED",
+    REGULAR = 'REGULAR',
+    PLUS = 'PLUS',
+    SCATTER = 'SCATTER',
+    NUKED = 'NUKED',
+}
+
+export enum AttackResult {
+    HIT = 'HIT',
+    MISS = 'MISS',
+    SUNK = 'SUNK',
 }

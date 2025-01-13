@@ -61,6 +61,10 @@
   height: 2em;
   background-color: purple;
 }
+.ship[data-overlapping=true] {
+  border: 3px solid rgba(255, 60, 60, 0.98);
+  opacity: 0.3;
+}
 
 .game-board.waiting {
   filter: blur(5px);

@@ -1,7 +1,9 @@
 import { Player } from './player/Player';
 import { GameData, GameState } from './GameState';
+import { Position } from './board/Position';
 import { defaultGameConfig, GameConfig } from './GameConfig';
 import { v4 as uuid_v4 } from 'uuid';
+import { AttackResult } from './attack/Attack';
 
 export class GameEngine {
     constructor(
@@ -16,7 +18,18 @@ export class GameEngine {
         this.gameState = GameState.IN_PROGRESS;
     }
 
-    makeMove() {}
+    makeMove(playerId: string, position: Position): AttackResult {
+        const player = this.players.find((player) => player.id === playerId);
+        if (!player) throw Error('player not found');
+
+        const result = player.beingAttacked(position);
+
+        if (result === AttackResult.MISS) {
+            this.nextTurn();
+        }
+
+        return result;
+    }
 
     addPlayer(player: Player): void {
         this.players.push(player);
@@ -44,7 +57,7 @@ export class GameEngine {
         const playerData = {
             id: player?.id || '',
             name: player?.name || '',
-            board: player?.getBoardForPlayer(this.config.boardSize),
+            board: player?.getBoard(this.config.boardSize, true),
             ships: player?.ships?.map((ship) => ({
                 positions: ship.positions,
                 hits: ship.hits,
@@ -54,20 +67,25 @@ export class GameEngine {
         const enemiesData = this.players
             .filter((p) => p.id !== playerId)
             .map((enemy) => ({
+                id: enemy.id,
                 name: enemy.name || '',
-                board: enemy.getBoardForEnemy(this.config.boardSize),
+                board: enemy.getBoard(this.config.boardSize, false),
             })) as GameData['enemies'];
 
         return {
             gameId: this.gameId,
             player: playerData,
             enemies: enemiesData,
-            currentTurn: this.players[this.currentTurn]?.id,
+            currentTurn: this.playerIdTurn(),
             config: this.config,
             state: this.gameState,
             waitingPlayers: this.waitingPlayersCount(),
             totalPlayers: this.totalPlayersCount(),
         } as GameData;
+    }
+
+    playerIdTurn(): string {
+        return this.players[this.currentTurn].id;
     }
 
     private nextTurn() {

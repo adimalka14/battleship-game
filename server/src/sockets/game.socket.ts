@@ -7,6 +7,7 @@ import {
     playerReady,
     allPlayersReady,
     getGameData,
+    makeMove,
 } from '../services/game.service';
 import { GameData } from '../gameLogic/GameState';
 import { parse } from 'cookie';
@@ -41,11 +42,18 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
 
     socket.on('getGameData', () => {
         const gameData = getGameData(gameID, socket.data.playerID as string);
-        socket.emit('gameData', gameData);
+        socket.emit('updateBoard', gameData);
     });
 
-    socket.on('playerMove', (data) => {
-        io.to(data.room).emit('updateBoard', data);
+    socket.on('playerShoot', (data) => {
+        try {
+            const playerId = socket.data.playerID as string;
+            const attackResult = makeMove(gameID, playerId, data.playerBeingAttacked, data.position);
+            console.log(attackResult);
+            io.to(gameID).emit('attackResult', attackResult);
+        } catch (e) {
+            console.error(e);
+        }
     });
 }
 

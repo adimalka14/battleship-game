@@ -49,6 +49,11 @@
   @include ship(3, yellow);
   @include ship(4, green);
   @include ship(5, purple);
+
+  &[data-overlapping="true"] {
+    border: 3px solid rgba(255, 60, 60, 0.98);
+    opacity: 0.3;
+  }
 }
 
 .game-board.waiting {

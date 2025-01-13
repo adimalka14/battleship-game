@@ -1,11 +1,13 @@
+import { v4 as uuid_v4 } from 'uuid';
+
 import { GameEngine } from '../gameLogic/GameEngine';
 import { GameSettings } from '../gameLogic/GameConfig';
 import { GameConfig } from '../gameLogic/GameConfig';
 import { Player } from '../gameLogic/player/Player';
 import { Ship } from '../gameLogic/ship/Ship';
 import { Position } from '../gameLogic/board/Position';
-import { v4 as uuid_v4 } from 'uuid';
 import { GameData, GameState } from '../gameLogic/GameState';
+import { AttackResult } from '../gameLogic/attack/Attack';
 
 const activeGames = new Map<string, GameEngine>();
 const waitingGames: GameEngine[] = [];
@@ -73,6 +75,16 @@ export const getGameData = (gameId: string, playerId: string): GameData => {
     const game = activeGames.get(gameId);
     if (!game) return {} as GameData;
     return game.getGameData(playerId);
+};
+
+export const makeMove = (gameId: string, attackerId: string, attactedId: string, position: Position): AttackResult => {
+    const game = activeGames.get(gameId);
+
+    if (!game) throw Error('game not found');
+
+    if (game.playerIdTurn() !== attackerId) throw Error('not your turn');
+
+    return game.makeMove(attactedId, position);
 };
 
 function getPlayer(playerQuery: any): Player {

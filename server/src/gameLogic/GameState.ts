@@ -8,12 +8,15 @@ export interface GameData {
         id: string;
         name: string;
         board: Cell[][] | undefined;
-        ships: {
-            positions: Position[];
-            hits: boolean[];
-        } | undefined;
+        ships:
+            | {
+                  positions: Position[];
+                  hits: boolean[];
+              }
+            | undefined;
     };
-    enemies:{
+    enemies: {
+        id: string;
         name: string;
         board: Cell[][] | undefined;
     }[];
@@ -27,5 +30,5 @@ export interface GameData {
 export enum GameState {
     WAITING_FOR_PLAYERS = 0,
     IN_PROGRESS = 1,
-    FINISHED = 2
+    FINISHED = 2,
 }
