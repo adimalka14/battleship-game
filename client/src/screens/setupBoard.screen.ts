@@ -18,6 +18,8 @@ import { Position } from '../interfaces/Position';
 import { getCellSize, isBoardIllegal, renderBoard, renderShipsOnBoard } from '../components/board';
 import { renderGameScreen } from './game.screen';
 import { emitEvent, onEvent } from '../utils/socket';
+import { renderOpponentSelectionScreen } from './opponentSelection.screen';
+import { renderFindOpponentScreen } from './findOpponent.screen';
 
 let BOARD_SIZE: number;
 
@@ -31,13 +33,16 @@ export function renderSetupBoardScreen() {
     const boardMarkup = renderBoard();
 
     $(IDS.APP).html(`
+        <button id="exit-btn">Exit</button>
         <div class="game-board">
             <h1>Arrange your ships</h1>
             <p>players ready:<span class="waiting-players">0</span>/<span class="total-players">${STORAGE.GAME_CONFIG.numOfPlayers}</span></p>
             <div class="board-container">
-                <div class="cells-layer">${boardMarkup}</div>
-                <div class="ship-layer"></div>
-             </div>     
+            <div class="board-grid">
+                <div class="cells-layer setup">${boardMarkup}</div>
+                <div class="ship-layer setup"></div>
+             </div>  
+             </div>   
             <button id="start-btn">Start</button>
             <button id="random-btn">Random</button>
         </div>
@@ -132,6 +137,16 @@ const bindEvents = () => {
         placeShipsRandomly(STORAGE.SHIPS as Ship[], BOARD_SIZE);
         renderShipsOnBoard(STORAGE.SHIPS as Ship[], true);
         initShipsWithRotation();
+    });
+
+    $('#exit-btn').on('click', () => {
+        emitEvent(EVENTS.LEAVE_DURING_SETUP, {});
+        renderOpponentSelectionScreen();
+    });
+
+    onEvent(EVENTS.PLAYER_LEFT_DURING_SETUP, (data: any) => {
+        console.log('player left during setup');
+        renderFindOpponentScreen();
     });
 
     onEvent(EVENTS.PLAYER_READY, (data: any) => {

@@ -5,7 +5,7 @@ import { PlayerStatus } from './player/Player';
 
 export interface GameData {
     gameId: string;
-    player: {
+    player?: {
         id: string;
         name: string;
         status: PlayerStatus;
@@ -17,14 +17,14 @@ export interface GameData {
               }
             | undefined;
     };
-    enemies: {
+    enemies?: {
         id: string;
         name: string;
         status: PlayerStatus;
         board: Cell[][] | undefined;
         sunkShips: Position[][];
     }[];
-    currentTurn: string | undefined;
+    currentTurn?: string | undefined;
     config: GameConfig;
     state: GameState;
     totalPlayers: number;
@@ -32,7 +32,8 @@ export interface GameData {
 }
 
 export enum GameState {
-    WAITING_FOR_PLAYERS = 0,
-    IN_PROGRESS = 1,
-    FINISHED = 2,
+    WAITING_FOR_PLAYERS = 'WAITING_FOR_PLAYERS',
+    SETTING_UP_BOARD = 'SETTING_UP_BOARD',
+    IN_PROGRESS = 'IN_PROGRESS',
+    FINISHED = 'FINISHED',
 }

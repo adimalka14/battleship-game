@@ -8,6 +8,10 @@ export class Ship {
         this.hits = new Array(positions.length).fill(false);
     }
 
+    clone(): Ship {
+        return new Ship([...this.positions], [...this.hits]);
+    }
+
     addPosition(position: Position): void {
         this.positions.push(position);
     }

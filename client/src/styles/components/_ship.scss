@@ -1,9 +1,22 @@
 .ship-layer {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  // pointer-events: none;
+
+  &.setup{
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &.game{
+    position: static;
+    pointer-events: none;
+  }
 }
 
 .ship {

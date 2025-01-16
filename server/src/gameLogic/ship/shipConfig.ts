@@ -14,12 +14,11 @@ export enum ShipsConfigAlternatives {
     DEFAULT = 0,
 }
 
-export const ShipsConfigurations : Record<ShipsConfigAlternatives, ShipConfig[]> = {
+export const ShipsConfigurations: Record<ShipsConfigAlternatives, ShipConfig[]> = {
     [ShipsConfigAlternatives.DEFAULT]: [
         { area: ShipSize.TWO, count: 1 },
         { area: ShipSize.THREE, count: 2 },
         { area: ShipSize.FOUR, count: 1 },
         { area: ShipSize.FIVE, count: 1 },
     ],
-}
-
+};

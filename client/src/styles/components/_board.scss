@@ -1,9 +1,28 @@
+.board-grid{
+  position: relative;
+  width: 20em;
+  height: 20em;
+
+}
+
 .cells-layer {
+  &.setup{
+    position: static;
+  }
+
+  &.game{
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+  }
+
   display: grid;
   grid-template-columns: repeat(10, 2em);
   grid-template-rows: repeat(10, 2em);
-  width: 100%;
-  height: 100%;
+  //width: 100%;
+  //height: 100%;
   box-sizing: border-box;
 }
 

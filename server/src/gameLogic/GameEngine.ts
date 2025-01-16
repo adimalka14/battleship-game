@@ -7,15 +7,31 @@ import { AttackResult } from './attack/Attack';
 
 export class GameEngine {
     constructor(
-        public readonly config: GameConfig = defaultGameConfig,
+        private readonly _config: GameConfig = defaultGameConfig,
+        private readonly _gameId: string = uuid_v4(),
+        private _gameState: GameState = GameState.WAITING_FOR_PLAYERS,
         public readonly players: Player[] = [],
-        public readonly gameId: string = uuid_v4(),
-        public gameState: GameState = GameState.WAITING_FOR_PLAYERS,
         public currentTurn: number = 0
     ) {}
 
+    get config(): GameConfig {
+        return this._config;
+    }
+
+    get gameId(): string {
+        return this._gameId;
+    }
+
+    get gameState(): GameState {
+        return this._gameState;
+    }
+
+    set gameState(state: GameState) {
+        this._gameState = state;
+    }
+
     init() {
-        this.gameState = GameState.IN_PROGRESS;
+        this._gameState = GameState.IN_PROGRESS;
     }
 
     makeMove(playerId: string, position: Position): AttackResult {
@@ -45,6 +61,20 @@ export class GameEngine {
         return this.players.length === this.config.numOfPlayers || !this.config.isMultiplayer;
     }
 
+    allPlayersReady(): { allReady: boolean; readyCount: number } {
+        const readyCount = this.players.filter((player) => player.status === PlayerStatus.WAITING).length;
+        const allReady = readyCount === this.players.length;
+
+        if (allReady) {
+            this.players.forEach((player) => {
+                player.status = PlayerStatus.PLAYING;
+            });
+            this.gameState = GameState.IN_PROGRESS;
+        }
+
+        return { allReady, readyCount };
+    }
+
     waitingPlayersCount(): number {
         return this.players.length;
     }
@@ -53,7 +83,26 @@ export class GameEngine {
         return this.config.numOfPlayers;
     }
 
-    getGameData(playerId: string): GameData {
+    playerRetired(playerId: string): void {
+        const playerIndex = this.players.findIndex((player) => player.id === playerId);
+        const player = this.players[playerIndex];
+        const clone = player.clone();
+
+        if (clone) this.players[playerIndex] = clone;
+        if (this.currentTurn === playerIndex) this.nextTurn();
+        this.updateIfWin();
+    }
+
+    getGameData(playerId: string | undefined = undefined): GameData {
+        if (playerId === undefined)
+            return {
+                gameId: this.gameId,
+                config: this.config,
+                state: this._gameState,
+                waitingPlayers: this.waitingPlayersCount(),
+                totalPlayers: this.totalPlayersCount(),
+            } as GameData;
+
         const player = this.players.find((player) => player.id === playerId);
 
         const playerData = {
@@ -83,7 +132,7 @@ export class GameEngine {
             enemies: enemiesData,
             currentTurn: this.playerIdTurn(),
             config: this.config,
-            state: this.gameState,
+            state: this._gameState,
             waitingPlayers: this.waitingPlayersCount(),
             totalPlayers: this.totalPlayersCount(),
         } as GameData;
@@ -94,7 +143,15 @@ export class GameEngine {
     }
 
     private nextTurn() {
-        this.currentTurn = (this.currentTurn + 1) % this.players.length;
+        for (let i = 1; i <= this.players.length; i++) {
+            const nextTurn: number = (this.currentTurn + i) % this.players.length;
+            const nextPlayer = this.players[nextTurn];
+
+            if (nextPlayer.status !== PlayerStatus.RETIRED && nextPlayer.status !== PlayerStatus.LOOSER) {
+                this.currentTurn = nextTurn;
+                break;
+            }
+        }
     }
 
     private updateIfWin() {
@@ -104,7 +161,7 @@ export class GameEngine {
 
         if (stillPlaying.length === 1) {
             stillPlaying[0].status = PlayerStatus.WINNER;
-            this.gameState = GameState.FINISHED;
+            this._gameState = GameState.FINISHED;
             this.currentTurn = -1;
         }
     }

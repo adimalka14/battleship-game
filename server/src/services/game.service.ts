@@ -1,22 +1,28 @@
 import { v4 as uuid_v4 } from 'uuid';
 
 import { GameEngine } from '../gameLogic/GameEngine';
-import { GameSettings } from '../gameLogic/GameConfig';
-import { GameConfig } from '../gameLogic/GameConfig';
+import { GameConfig, GameSettings } from '../gameLogic/GameConfig';
 import { Player, PlayerStatus } from '../gameLogic/player/Player';
 import { Ship } from '../gameLogic/ship/Ship';
 import { Position } from '../gameLogic/board/Position';
 import { GameData, GameState } from '../gameLogic/GameState';
 import { AttackResult } from '../gameLogic/attack/Attack';
 
-const activeGames = new Map<string, GameEngine>();
-const waitingGames: GameEngine[] = [];
+const games = new Map<string, GameEngine>();
 const players = new Map<string, Player>();
 const playerToGameId = new Map<string, string>();
 const tokensToPlayers = new Map<string, string>();
 const playersToSockets = new Map<string, string>();
 
+const waitingGames = (): GameEngine[] => {
+    return [...games.values()].filter((game) => game.gameState === GameState.WAITING_FOR_PLAYERS);
+};
+
+const activeGames = [...games.values()].filter((game) => game.gameState === GameState.IN_PROGRESS);
+
 export const gameSettings = GameSettings;
+export const setPlayerToSocket = (playerId: string, socketId: string) => playersToSockets.set(playerId, socketId);
+export const getSocketID = (playerId: string) => playersToSockets.get(playerId);
 
 export const getPlayerID = (token: string, createIfNotExist = false): string | null => {
     // if(!token) throw Error('missing token');
@@ -33,23 +39,19 @@ const createPlayerID = (token: string): string => {
     return playerId;
 };
 
-export const setPlayerToSocket = (playerId: string, socketId: string) => playersToSockets.set(playerId, socketId);
-export const getSocketID = (playerId: string) => playersToSockets.get(playerId);
-
 export const joinGame = (metadata: any): GameData => {
     const { playerQuery, gameConfig } = metadata;
     const player = getPlayer(playerQuery);
     const game = findAvailableGame(gameConfig as GameConfig);
 
     game.addPlayer(player);
+    playerToGameId.set(player.id, game.gameId);
 
     if (game.isFull()) {
-        activeGames.set(game.gameId, game);
-        waitingGames.splice(waitingGames.indexOf(game), 1);
-        game.init();
+        game.gameState = GameState.SETTING_UP_BOARD;
     }
 
-    return game.getGameData(player.id);
+    return game.getGameData();
 };
 
 export const playerReady = (playerId: string, data: Position[][]): boolean => {
@@ -63,34 +65,26 @@ export const playerReady = (playerId: string, data: Position[][]): boolean => {
 };
 
 export const allPlayersReady = (gameId: string): { allReady: boolean; readyCount: number } => {
-    const game = activeGames.get(gameId);
+    const game = games.get(gameId);
     if (!game) return { allReady: false, readyCount: 0 };
 
-    const readyCount = game.players.filter((player) => player.status === PlayerStatus.WAITING).length;
-    const allReady = readyCount === game.players.length;
-
-    allReady &&
-        game.players.forEach((player) => {
-            player.status = PlayerStatus.PLAYING;
-        });
-
-    return { allReady, readyCount };
+    return game.allPlayersReady();
 };
 
 export const getAllGamePlayers = (gameId: string): string[] => {
-    const game = activeGames.get(gameId);
+    const game = games.get(gameId);
 
     return game ? game.players.map((player) => player.id) : [];
 };
 
-export const getGameData = (gameId: string, playerId: string): GameData => {
-    const game = activeGames.get(gameId);
+export const getGameData = (gameId: string, playerId: string | undefined = undefined): GameData => {
+    const game = games.get(gameId);
     if (!game) return {} as GameData;
     return game.getGameData(playerId);
 };
 
 export const makeMove = (gameId: string, attackerId: string, attactedId: string, position: Position): AttackResult => {
-    const game = activeGames.get(gameId);
+    const game = games.get(gameId);
 
     if (!game) throw Error('game not found');
 
@@ -100,14 +94,14 @@ export const makeMove = (gameId: string, attackerId: string, attactedId: string,
 };
 
 export const isGameFinished = (gameId: string): boolean => {
-    const game = activeGames.get(gameId);
+    const game = games.get(gameId);
     if (!game) throw Error('game not found');
 
     return game ? game.gameState === GameState.FINISHED : false;
 };
 
 export const deleteGame = (gameId: string): void => {
-    const game = activeGames.get(gameId);
+    const game = games.get(gameId);
 
     if (!game) return;
 
@@ -116,7 +110,48 @@ export const deleteGame = (gameId: string): void => {
         playerToGameId.delete(player.id);
     });
 
-    activeGames.delete(gameId);
+    games.delete(gameId);
+};
+
+export const userLeaveLobby = (playerId: string): void => {
+    const gameId = playerToGameId.get(playerId);
+    const game = games.get(gameId || '');
+    const player = players.get(playerId);
+
+    if (game && player) {
+        game.removePlayer(player);
+        player.status = PlayerStatus.CONNECTED;
+    }
+};
+
+export const userLeaveDuringSetup = (playerId: string): void => {
+    const gameId = playerToGameId.get(playerId);
+
+    gameId && deleteGame(gameId);
+};
+
+export const userLeaveGame = (playerId: string): void => {
+    const game = games.get(playerToGameId.get(playerId) || '');
+
+    game?.playerRetired(playerId);
+    playerToGameId.delete(playerId);
+};
+
+export const userDisconnect = (playerId: string): void => {
+    const gameId = playerToGameId.get(playerId);
+    const player = players.get(playerId);
+    if (!player || !gameId) return;
+
+    const game = games.get(gameId);
+    if (!game) return;
+
+    player.status = PlayerStatus.DISCONNECTED;
+
+    if (game.gameState === GameState.IN_PROGRESS) {
+    } else if (game.gameState === GameState.WAITING_FOR_PLAYERS || game.gameState === GameState.SETTING_UP_BOARD) {
+        game.removePlayer(player);
+        game.gameState = GameState.WAITING_FOR_PLAYERS;
+    }
 };
 
 function getPlayer(playerQuery: any): Player {
@@ -134,11 +169,11 @@ function getPlayer(playerQuery: any): Player {
 }
 
 function findAvailableGame(config: GameConfig): GameEngine {
-    let game = waitingGames.find((game) => JSON.stringify(game.config) === JSON.stringify(config));
+    let game = waitingGames().find((game) => JSON.stringify(game.config) === JSON.stringify(config));
 
     if (game === undefined) {
         game = new GameEngine(config);
-        waitingGames.push(game);
+        games.set(game.gameId, game);
     }
 
     return game;

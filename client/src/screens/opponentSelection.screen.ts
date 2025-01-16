@@ -13,14 +13,13 @@ const playerBtnID = `#${playerBtn}`;
 export const renderOpponentSelectionScreen = () => {
     $(IDS.APP).html(`
         <h1>Choose your opponent</h1>
-        <button id=${computerBtn}><VS>VS Computer</button>
         <button id=${playerBtn}><VS>VS Player</button>
     `);
     bindEvents();
 };
 
 const bindEvents = () => {
-    $(computerBtnID).on('click', () => joinGame(false));
+    // $(computerBtnID).on('click', () => joinGame(false));
 
     $(playerBtnID).on('click', () => joinGame(true));
 

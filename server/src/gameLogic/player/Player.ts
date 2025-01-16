@@ -34,6 +34,17 @@ export class Player {
         return AttackResult.MISS;
     }
 
+    clone(): Player {
+        return new Player(
+            'Bot',
+            this.name,
+            false,
+            PlayerStatus.RETIRED,
+            this._ships.map((ship) => ship.clone()),
+            new Set([...this._revealedPositions])
+        );
+    }
+
     revealPosition(position: Position): void {
         this._revealedPositions.add(`${position.row},${position.col}`);
     }

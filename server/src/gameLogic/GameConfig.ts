@@ -1,15 +1,11 @@
-import {
-    NumberOfPlayers,
-    TimeLimitForTurn,
-    BoardSize,
-} from './consts';
-import { ShipConfig, ShipsConfigurations, ShipsConfigAlternatives} from './ship/shipConfig';
+import { NumberOfPlayers, TimeLimitForTurn, BoardSize } from './consts';
+import { ShipConfig, ShipsConfigurations, ShipsConfigAlternatives } from './ship/shipConfig';
 
 export interface GameConfig {
     boardSize: BoardSize;
     timeLimit: TimeLimitForTurn;
     numOfPlayers: NumberOfPlayers;
-    ships : ShipConfig[];
+    ships: ShipConfig[];
     isMultiplayer: boolean;
 }
 
@@ -19,7 +15,7 @@ export const defaultGameConfig: GameConfig = {
     numOfPlayers: NumberOfPlayers.TWO,
     ships: ShipsConfigurations[ShipsConfigAlternatives.DEFAULT],
     isMultiplayer: false,
-}
+};
 
 export const GameSettings = {
     boardSizes: Object.values(BoardSize),

@@ -1,22 +1,36 @@
 import $ from 'jquery';
 import { IDS, EVENTS } from '../utils/constants';
 import { emitEvent, onEvent } from '../utils/socket';
-import { renderBoard } from '../components/board';
+import { renderBoard, renderShipsOnBoard } from '../components/board';
 import { renderOpponentSelectionScreen } from './opponentSelection.screen';
+import { Direction, Ship } from '../interfaces/Ship';
+import { Position } from '../interfaces/Position';
 
 let gameState: any;
 
 export function renderGameScreen(data: any) {
+    console.log(data);
     $(IDS.APP).html(`
-        <div class="game-board">
-            <div class="game-state"></div>
+<div class="game-board">
+        <div class="game-state"></div>
+        
               <div class="board-container">
-                <div class="cells-layer"></div>
-             </div>           
-        </div>
-        <button id="exit-btn">Exit</button>
+                <div class="board-grid">
+                <div class="ship-layer game"></div>
+                <div class="cells-layer game"></div>
+                </div>
+             </div> 
+        <button id="exit-btn">Exit</button>  
+</div>
+        
+        
 `);
     bindEvents();
+
+    // $('.cells-layer').css({
+    //     position: 'absolute',
+    //     zIndex: 12,
+    // });
 
     if (data?.gameData) {
         gameState = data.gameData;
@@ -26,8 +40,10 @@ export function renderGameScreen(data: any) {
 
 function bindEvents() {
     $('#exit-btn').on('click', () => {
+        if (gameState) emitEvent(EVENTS.LEAVE_GAME, {});
         renderOpponentSelectionScreen();
     });
+
     onEvent(EVENTS.UPDATE_BOARD, (data: any) => {
         if (data?.attackResult) {
             console.log(data.attackResult);
@@ -69,9 +85,22 @@ function updateGameBoard() {
     if (gameState.player.id === gameState.currentTurn) {
         $('.game-state').text('Your turn');
         $('.cells-layer').html(renderBoard(gameState.enemies[0].board));
+        renderShipsOnBoard(convertShipsToUIFormat(gameState?.enemies[0]?.sunkShips));
         attackerEvent();
     } else {
         $('.game-state').text('Wait for opponent turn');
         $('.cells-layer').html(renderBoard(gameState.player.board));
+        renderShipsOnBoard(convertShipsToUIFormat(gameState?.player?.ships.map((ship) => ship.positions)));
     }
 }
+
+const convertShipsToUIFormat = (ships: Position[][]): Ship[] => {
+    return ships.map((ship, i) => {
+        return {
+            id: `ship-${ship.length}-${i}`,
+            startPosition: ship[0],
+            direction: ship[0].row === ship[1].row ? Direction.HORIZONTAL : Direction.VERTICAL,
+            area: ship.length as number,
+        };
+    });
+};
