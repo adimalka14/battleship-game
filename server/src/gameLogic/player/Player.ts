@@ -36,7 +36,7 @@ export class Player {
 
     clone(): Player {
         return new Player(
-            'Bot',
+            'Bot ' + this.id,
             this.name,
             false,
             PlayerStatus.RETIRED,
@@ -54,9 +54,7 @@ export class Player {
     }
 
     getBoard(boardSize: number, isPlayer: boolean): Cell[][] {
-        const board = new Array(boardSize)
-            .fill(null)
-            .map(() => new Array(boardSize).fill(isPlayer ? Cell.EMPTY : Cell.NOT_REVEALED));
+        const board = new Array(boardSize).fill(null).map(() => new Array(boardSize).fill(Cell.NOT_REVEALED));
 
         for (const position of this._revealedPositions) {
             const [y, x] = position.split(',').map(Number);

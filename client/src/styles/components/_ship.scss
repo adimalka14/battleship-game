@@ -16,20 +16,47 @@
   &.game{
     position: static;
     pointer-events: none;
+
+    .ship{
+      opacity: 0.6 !important;
+    }
   }
 }
 
 .ship {
   position: absolute !important;
   z-index: 10;
-  border: 1px solid #000;
   box-sizing: border-box;
+  border: none;
+  border-radius: 45%;
 
   @mixin ship($area, $color) {
     &.ship-area-#{$area} {
-      width: calc($area * 2em);
-      height: 2em;
-      background-color: $color;
+      //width: calc($area * 2em);
+      // padding-top: calc($area * 2em);
+      //height: 2em;
+      width: 2em;
+      height: calc($area * 2em);
+      background-image: url("./assets/submarine.png");
+      background-size: 100% 100%;
+      background-position: center center;
+      background-repeat: no-repeat;
+      aspect-ratio: 1 / 1;
+
+      &[data-direction="vertical"] {
+        width: 2em;
+        height: calc($area * 2em);
+        background-size: 100% 100%;
+
+        //transform: rotate(90deg);
+      }
+
+      //&[data-direction="horizontal"] {
+      //  width: calc($area * 2em);
+      //  height: 2em;
+      //}
+
+      //background-color: $color;
     }
   }
 

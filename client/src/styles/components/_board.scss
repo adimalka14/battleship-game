@@ -1,16 +1,41 @@
-.board-grid{
+$cell-size: 2em;
+$board-length: 10;
+
+.game-board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.board-container {
+  height: calc($board-length * $cell-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 196, 255, 0.10);
+  padding: 2em;
+  border-radius: 10%;
+}
+
+.board-grid {
   position: relative;
   width: 20em;
   height: 20em;
-
+  border: 5px solid #1e90ff;
+  // border: 5px solid linear-gradient(135deg, #1e90ff, #00bfff);
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.7);
+  background: linear-gradient(135deg, rgba(30, 144, 255, 0.35), rgba(0, 191, 255, 0.31));
 }
 
 .cells-layer {
-  &.setup{
+  &.setup {
     position: static;
   }
 
-  &.game{
+  &.game {
     position: absolute;
     z-index: 10;
     top: 0;
@@ -19,20 +44,99 @@
   }
 
   display: grid;
-  grid-template-columns: repeat(10, 2em);
-  grid-template-rows: repeat(10, 2em);
-  //width: 100%;
-  //height: 100%;
+  grid-template-columns: repeat($board-length, $cell-size);
+  grid-template-rows: repeat($board-length, $cell-size);
   box-sizing: border-box;
 }
 
 .board-cell {
-  border: 1px solid #999;
+  position: relative;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.5em;
+  border-radius: 5px;
+
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+
+  .icon{
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
+  }
+
+  &[data-value="not-revealed"] {
+    cursor: pointer;
+  }
+
+  &[data-value="empty"] {
+    background-image: url('./assets/letter-x.png');
+    background-size: cover;
+    cursor: not-allowed;
+    box-shadow: inset 0 0 10px rgba(0, 14, 253, 0.5);
+  }
+
+  &[data-value="ship"] {
+  }
+
+  @keyframes fireAnimation {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: -85px 0;
+    }
+
+    0%, 100% {
+      filter: brightness(1);
+      transform: scale(0.9);
+    }
+    50% {
+      filter: brightness(1.2);
+      transform: scale(1);
+    }
+  }
+
+  &[data-value="hit-ship"] {
+    box-shadow: inset 0 0 10px rgba(255, 99, 71, 0.8),inset 0 0 8px rgba(255, 69, 0, 0.5);
+
+    .icon {
+      background: url('./assets/corrected_fire_sprite_sheet.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      animation: fireAnimation 1s steps(4) infinite alternate;
+      transform-origin: center;
+    }
+  }
+
+  @keyframes shake {
+    0%, 100%, 50% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(10deg);
+    }
+    75% {
+      transform: rotate(-10deg);
+    }
+  }
+
+  &[data-value="sunk-ship"] {
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.71);
+
+    .icon{
+      background: url('./assets/risk-skull.png') no-repeat center center;
+      animation: infinite shake 1s alternate;
+      background-size: cover;
+    }
+  }
+
 }
 
 .board-row {

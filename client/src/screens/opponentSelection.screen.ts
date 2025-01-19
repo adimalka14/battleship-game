@@ -5,15 +5,16 @@ import { EVENTS } from '../utils/constants';
 import { renderFindOpponentScreen } from './findOpponent.screen';
 import STORAGE from '../utils/storage';
 
-const computerBtn = 'computer';
+const computerBtn = 'computer-btn menu';
 const computerBtnID = `#${computerBtn}`;
-const playerBtn = 'player';
+const playerBtn = 'btn.player.menu';
 const playerBtnID = `#${playerBtn}`;
 
 export const renderOpponentSelectionScreen = () => {
     $(IDS.APP).html(`
-        <h1>Choose your opponent</h1>
-        <button id=${playerBtn}><VS>VS Player</button>
+        <h1>Battleship</h1>
+        <p class="message">Choose your opponent</p>
+        <div id="player-btn" class="btn player menu">VS Player</div>
     `);
     bindEvents();
 };
@@ -21,7 +22,7 @@ export const renderOpponentSelectionScreen = () => {
 const bindEvents = () => {
     // $(computerBtnID).on('click', () => joinGame(false));
 
-    $(playerBtnID).on('click', () => joinGame(true));
+    $('#player-btn').on('click', () => joinGame(true));
 
     emitEvent(EVENTS.CLIENT_CONNECTED, {});
 

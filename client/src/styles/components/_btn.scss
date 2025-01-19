@@ -1,0 +1,42 @@
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  border: transparent;
+  border-radius: 0.7em;
+  padding: 10px;
+  font-size: 2em;
+  height: fit-content;
+  width: 5em;
+  opacity: 0.8;
+  color: white;
+  white-space: nowrap;
+  background: rgba(45, 120, 248, 0.7);
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.menu{
+    font-size: 3em;
+    height: 4em;
+    width: 4em;
+    opacity: 0.7;
+  }
+}
+
+#exit-btn {
+  position: absolute;
+  font-size: 3em;
+  width: fit-content;
+  height: fit-content;
+  top: 1%;
+  left: 1%;
+  padding: 0;
+  color: rgba(6, 6, 12, 0.67);
+  background: transparent;
+  // background: rgba(253, 31, 31, 0.53);
+}

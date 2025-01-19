@@ -132,9 +132,11 @@ export const userLeaveDuringSetup = (playerId: string): void => {
 
 export const userLeaveGame = (playerId: string): void => {
     const game = games.get(playerToGameId.get(playerId) || '');
+    const player = players.get(playerId);
 
     game?.playerRetired(playerId);
     playerToGameId.delete(playerId);
+    player?.reset();
 };
 
 export const userDisconnect = (playerId: string): void => {
@@ -148,9 +150,7 @@ export const userDisconnect = (playerId: string): void => {
     player.status = PlayerStatus.DISCONNECTED;
 
     if (game.gameState === GameState.IN_PROGRESS) {
-    } else if (game.gameState === GameState.WAITING_FOR_PLAYERS || game.gameState === GameState.SETTING_UP_BOARD) {
-        game.removePlayer(player);
-        game.gameState = GameState.WAITING_FOR_PLAYERS;
+        // todo : implement option to reconnect and back to game
     }
 };
 

@@ -10,8 +10,9 @@ const startBtnID = `#${startBtn}`;
 export const renderLoginScreen = () => {
     $(IDS.APP).html(`
         <h1>Battleship</h1>
+        <p class="message">Please enter your username</p>
         <input type="text" id="username" placeholder="username">
-        <button id="start-btn">Start</button>
+        <button id="start-btn" class="btn">Start</button>
     `);
 
     bindEvents();

@@ -5,7 +5,17 @@ import { Ship } from '../interfaces/Ship';
 import { createShipElement, isShipOverlapping } from './ship';
 
 let BOARD_SIZE = (STORAGE?.GAME_CONFIG?.boardSize as number) || 10;
-const EMPTY_BOARD = new Array(BOARD_SIZE).fill(Cell.EMPTY).map(() => new Array(BOARD_SIZE).fill(Cell.EMPTY));
+const EMPTY_BOARD = new Array(BOARD_SIZE)
+    .fill(Cell.NOT_REVEALED)
+    .map(() => new Array(BOARD_SIZE).fill(Cell.NOT_REVEALED));
+
+const CELL_STATUS = {
+    0: 'not-revealed',
+    1: 'empty',
+    2: 'ship',
+    3: 'hit-ship',
+    4: 'sunk-ship',
+};
 
 export function renderBoard(board: Cell[][] = EMPTY_BOARD): string {
     let boardHtml = '';
@@ -17,7 +27,10 @@ export function renderBoard(board: Cell[][] = EMPTY_BOARD): string {
           class="board-cell" 
           data-row="${row}" 
           data-col="${col}"
-        >${board[row][col]}</div>`;
+          data-value="${CELL_STATUS[board[row][col]]}"
+        >
+        <div class="icon"></div>
+</div>`;
         }
         boardHtml += `</div>`;
     }

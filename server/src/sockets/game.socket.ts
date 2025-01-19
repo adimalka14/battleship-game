@@ -16,7 +16,7 @@ import {
     userLeaveDuringSetup,
     userLeaveGame,
 } from '../services/game.service';
-import { GameData } from '../gameLogic/GameState';
+import { GameData, GameState } from '../gameLogic/GameState';
 
 export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
     setPlayerToSocket(socket.data.playerID as string, socket.id);
@@ -131,7 +131,7 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
             try {
                 userLeaveGame(socket.data.playerID as string);
                 socket.leave(gameID);
-                emitToPlayers('updateBoard', (playerId) => getGameData(gameID, playerId));
+                emitToPlayers('updateBoard', (playerId) => ({ gameData: getGameData(gameID, playerId) }));
                 handleGameEnd();
             } catch (error) {
                 console.error('Error in leaveGame:', error);
@@ -141,14 +141,14 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
         playerReady: (data: any) => {
             try {
                 playerReady(socket.data.playerID as string, data);
-                const { allReady } = allPlayersReady(gameID);
+                const { allReady, readyCount } = allPlayersReady(gameID);
                 if (allReady) {
                     emitToPlayers('allPlayersReady', (playerId) => ({
                         gameData: getGameData(gameID, playerId),
                     }));
                 } else {
                     emitToPlayers('playerReady', () => ({
-                        readyCount: getAllGamePlayers(gameID).length,
+                        readyCount,
                     }));
                 }
             } catch (error) {
@@ -181,8 +181,24 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
 
         disconnect: () => {
             try {
-                userDisconnect(socket.data.playerID as string);
-                emitToPlayers('playerLeft', () => getGameData(gameID));
+                console.log('User disconnected:', socket.id);
+                const { state } = getGameData(gameID);
+
+                switch (state) {
+                    case GameState.IN_PROGRESS:
+                        events.leaveGame();
+                        // userDisconnect(socket.data.playerID as string);
+                        // emitToPlayers('updateBoard', (playerId) => ({
+                        //     gameData: getGameData(gameID, playerId),
+                        // }));
+                        break;
+                    case GameState.WAITING_FOR_PLAYERS:
+                        events.LeaveLobby();
+                        break;
+                    case GameState.SETTING_UP_BOARD:
+                        events.leaveDuringSetup();
+                        break;
+                }
             } catch (error) {
                 console.error('Error in disconnect:', error);
             }

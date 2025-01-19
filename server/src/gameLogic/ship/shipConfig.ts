@@ -4,6 +4,7 @@ export interface ShipConfig {
 }
 
 export enum ShipSize {
+    ONE = 1,
     TWO = 2,
     THREE = 3,
     FOUR = 4,

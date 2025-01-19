@@ -8,16 +8,17 @@ import { renderOpponentSelectionScreen } from './opponentSelection.screen';
 
 export const renderFindOpponentScreen = () => {
     $(IDS.APP).html(`
-        <button id="back-btn">Back</button>
-        <p>Looking for an opponent...</p>
-        <p><span class="waiting-players"></span>/<span class="total-players"></span></p>
+        <button id="exit-btn" class="btn"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+        <h1>Battleship</h1>
+        <p class="message">Looking for an opponent...</p>
+        <p class="message"><span class="waiting-players"></span>/<span class="total-players"></span></p>
     `);
 
     bindEvents();
 };
 
 const bindEvents = () => {
-    $(`#back-btn`).on('click', () => {
+    $(`#exit-btn`).on('click', () => {
         emitEvent(EVENTS.LEAVE_LOBBY, {});
         renderOpponentSelectionScreen();
     });
@@ -36,7 +37,7 @@ const bindEvents = () => {
 
     onEvent(EVENTS.PLAYER_JOINED, (data: any) => {
         console.log(data);
-        updatePlayersNumber(data.waitingPlayers, data.totalPlayers);
+        updatePlayersNumber(data?.waitingPlayers, data.totalPlayers);
         if (data.state === 'SETTING_UP_BOARD') {
             renderSetupBoardScreen();
         }

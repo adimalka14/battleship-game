@@ -11,16 +11,21 @@ let gameState: any;
 export function renderGameScreen(data: any) {
     console.log(data);
     $(IDS.APP).html(`
+<button id="exit-btn" class="btn"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 <div class="game-board">
-        <div class="game-state"></div>
-        
-              <div class="board-container">
-                <div class="board-grid">
-                <div class="ship-layer game"></div>
-                <div class="cells-layer game"></div>
-                </div>
-             </div> 
-        <button id="exit-btn">Exit</button>  
+    <div class="game-state message"></div>
+    <div class="board-container">
+        <div class="board-grid">
+            <div class="ship-layer game"></div>
+            <div class="cells-layer game"></div>
+        </div>
+                
+<!--    <div class="board-container">-->
+<!--        <div class="board-grid">-->
+<!--            <div class="ship-layer game"></div>-->
+<!--            <div class="cells-layer game"></div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
         
         
@@ -40,7 +45,7 @@ export function renderGameScreen(data: any) {
 
 function bindEvents() {
     $('#exit-btn').on('click', () => {
-        if (gameState) emitEvent(EVENTS.LEAVE_GAME, {});
+        if (gameState && gameState?.state !== 'FINISHED') emitEvent(EVENTS.LEAVE_GAME, {});
         renderOpponentSelectionScreen();
     });
 

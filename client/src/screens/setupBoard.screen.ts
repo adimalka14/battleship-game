@@ -33,18 +33,18 @@ export function renderSetupBoardScreen() {
     const boardMarkup = renderBoard();
 
     $(IDS.APP).html(`
-        <button id="exit-btn">Exit</button>
+        <button id="exit-btn" class="btn"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
         <div class="game-board">
             <h1>Arrange your ships</h1>
-            <p>players ready:<span class="waiting-players">0</span>/<span class="total-players">${STORAGE.GAME_CONFIG.numOfPlayers}</span></p>
+            <p class="message">players ready:<span class="waiting-players">0</span>/<span class="total-players">${STORAGE.GAME_CONFIG.numOfPlayers}</span></p>
             <div class="board-container">
             <div class="board-grid">
                 <div class="cells-layer setup">${boardMarkup}</div>
                 <div class="ship-layer setup"></div>
              </div>  
              </div>   
-            <button id="start-btn">Start</button>
-            <button id="random-btn">Random</button>
+            <button id="random-btn" class="btn">Random</button>
+            <button id="start-btn" class="btn">Start</button>
         </div>
         <div class="game-message hide">
             <p>waiting for opponent...</p>
@@ -150,8 +150,7 @@ const bindEvents = () => {
     });
 
     onEvent(EVENTS.PLAYER_READY, (data: any) => {
-        console.log(data);
-        $('.waiting-players').text(data);
+        $('.waiting-players').text(data?.readyCount);
     });
 
     onEvent(EVENTS.ALL_PLAYERS_READY, (data: any) => {

@@ -17,9 +17,7 @@ export default function setupSockets(io: SocketIOServer) {
             console.error('Failed to initialize game socket handler:', error);
         }
 
-        socket.on('disconnect', () => {
-            console.log('User disconnected:', socket.id);
-        });
+        socket.on('disconnect', () => {});
     });
 }
 

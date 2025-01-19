@@ -1,5 +1,6 @@
 @use "components/ship";
 @use "components/board";
+@use "components/btn";
 @use "screens/setupBoard";
 
 body {
@@ -10,10 +11,56 @@ body {
 }
 
 #app {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
+  gap: 1em;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/p.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+
+h1,.message {
+  font-family: 'Impact', sans-serif;
+  white-space: nowrap;
+  color: #fbeaa2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  -webkit-text-stroke: 2px rgba(168, 152, 89, 0.78);
+  margin: 0.2em 0;
+}
+
+h1{
+  font-size: 6em;
+}
+
+.message{
+  font-size: 2em;
+}
+
+input {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px 15px;
+  font-size: 1.2em;
+  border: 2px solid #1e90ff;
+  border-radius: 10px;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
