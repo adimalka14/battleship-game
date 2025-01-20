@@ -36,27 +36,23 @@
       // padding-top: calc($area * 2em);
       //height: 2em;
       width: 2em;
+      background-color: $color;
       height: calc($area * 2em);
-      background-image: url("./assets/submarine.png");
-      background-size: 100% 100%;
-      background-position: center center;
-      background-repeat: no-repeat;
-      aspect-ratio: 1 / 1;
-
-      &[data-direction="vertical"] {
-        width: 2em;
-        height: calc($area * 2em);
-        background-size: 100% 100%;
-
-        //transform: rotate(90deg);
-      }
+      // background-image: url(`./assets/ships/submarine_2_cells.png`);
 
       //&[data-direction="horizontal"] {
-      //  width: calc($area * 2em);
-      //  height: 2em;
+      //  background-image: url("./assets/ships/submarine_#{$area}_cells_horizontal.png");
       //}
+      //&[data-direction="vertical"] {
+      //  background-image: url("./assets/ships/submarine_#{$area}_cells_vertical.png");
+      //  //transform: rotate(90deg);
+      //}
+      //
+      //background-size: 100% 100%;
+      //background-position: center center;
+      //background-repeat: no-repeat;
+      //aspect-ratio: 1 / 1;
 
-      //background-color: $color;
     }
   }
 

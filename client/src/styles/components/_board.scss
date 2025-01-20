@@ -24,10 +24,15 @@ $board-length: 10;
   width: 20em;
   height: 20em;
   border: 5px solid #1e90ff;
-  // border: 5px solid linear-gradient(135deg, #1e90ff, #00bfff);
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(30, 144, 255, 0.7);
-  background: linear-gradient(135deg, rgba(30, 144, 255, 0.35), rgba(0, 191, 255, 0.31));
+  background: linear-gradient(135deg, rgba(20, 225, 225, 0.99), rgba(0, 191, 255, 0.98));
+}
+
+.flip-board {
+  -webkit-animation: flip-scale-down-diag-2 0.5s linear both;
+  animation: flip-scale-down-diag-2 0.5s linear both;
+
 }
 
 .cells-layer {
@@ -82,27 +87,6 @@ $board-length: 10;
     box-shadow: inset 0 0 10px rgba(0, 14, 253, 0.5);
   }
 
-  &[data-value="ship"] {
-  }
-
-  @keyframes fireAnimation {
-    from {
-      background-position: 0 0;
-    }
-    to {
-      background-position: -85px 0;
-    }
-
-    0%, 100% {
-      filter: brightness(1);
-      transform: scale(0.9);
-    }
-    50% {
-      filter: brightness(1.2);
-      transform: scale(1);
-    }
-  }
-
   &[data-value="hit-ship"] {
     box-shadow: inset 0 0 10px rgba(255, 99, 71, 0.8),inset 0 0 8px rgba(255, 69, 0, 0.5);
 
@@ -110,28 +94,17 @@ $board-length: 10;
       background: url('./assets/corrected_fire_sprite_sheet.png');
       background-size: cover;
       background-repeat: no-repeat;
-      animation: fireAnimation 1s steps(4) infinite alternate;
+      animation: fireAnimation 1.5s steps(4) infinite alternate;
       transform-origin: center;
     }
   }
 
-  @keyframes shake {
-    0%, 100%, 50% {
-      transform: rotate(0deg);
-    }
-    25% {
-      transform: rotate(10deg);
-    }
-    75% {
-      transform: rotate(-10deg);
-    }
-  }
-
   &[data-value="sunk-ship"] {
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.71);
+    box-shadow: inset 0 0 10px rgba(18, 17, 17, 0.59);
+    //background-color: rgb(18, 17, 17);
 
     .icon{
-      background: url('./assets/risk-skull.png') no-repeat center center;
+      background: url('./assets/death.png') no-repeat center center;
       animation: infinite shake 1s alternate;
       background-size: cover;
     }

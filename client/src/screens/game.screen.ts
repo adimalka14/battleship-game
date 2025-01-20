@@ -49,20 +49,20 @@ function bindEvents() {
         renderOpponentSelectionScreen();
     });
 
-    onEvent(EVENTS.UPDATE_BOARD, (data: any) => {
-        if (data?.attackResult) {
-            console.log(data.attackResult);
-        }
-
+    onEvent(EVENTS.UPDATE_BOARD, async (data: any) => {
+        console.log(data?.attackResult);
         gameState = data.gameData;
         console.log(data);
+
+        if (data?.attackResult === 'MISS') {
+            await flipBoard();
+        }
+
         updateGameBoard();
     });
 
     onEvent(EVENTS.GAME_FINISHED, (data: any) => {
-        if (data?.attackResult) {
-            console.log(data.attackResult);
-        }
+        console.log(data?.attackResult);
 
         gameState = data.gameData;
         console.log(data);
@@ -84,6 +84,19 @@ function attackerEvent() {
             },
         });
     });
+}
+
+async function flipBoard() {
+    $('.board-grid').addClass('flip-board');
+
+    setTimeout(() => {
+        $('.cells-layer').html(renderBoard());
+        renderShipsOnBoard([], false);
+    }, 250);
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    $('.board-grid').removeClass('flip-board');
 }
 
 function updateGameBoard() {

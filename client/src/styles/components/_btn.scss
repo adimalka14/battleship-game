@@ -3,28 +3,35 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+
   cursor: pointer;
-  border: none;
   border: transparent;
   border-radius: 0.7em;
+
   padding: 10px;
   font-size: 2em;
   height: fit-content;
   width: 5em;
-  opacity: 0.8;
+  opacity: 0.7;
   color: white;
   white-space: nowrap;
-  background: rgba(45, 120, 248, 0.7);
+  background: rgba(20, 208, 225, 0.8);
 
   &:hover {
     opacity: 1;
   }
 
   &.menu{
-    font-size: 3em;
-    height: 4em;
-    width: 4em;
-    opacity: 0.7;
+    padding: 5px 20px;
+    background-image: url("./assets/menu.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center 20%;
+    height: 5em;
+    width: 5em;
+
+    font-size: 2.5em;
+    align-items: end;
   }
 }
 
