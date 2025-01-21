@@ -168,7 +168,7 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
         playerShoot: (data: any) => {
             try {
                 const playerId = socket.data.playerID as string;
-                const attackResult = makeMove(gameID, playerId, data.playerBeingAttacked, data.position);
+                const attackResult = makeMove(gameID, playerId, data.playerBeingAttacked, data.positions);
                 emitToPlayers('updateBoard', (playerId) => ({
                     gameData: getGameData(gameID, playerId),
                     attackResult,

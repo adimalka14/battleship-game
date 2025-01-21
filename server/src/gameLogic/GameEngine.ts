@@ -3,7 +3,7 @@ import { GameData, GameState } from './GameState';
 import { Position } from './board/Position';
 import { defaultGameConfig, GameConfig } from './GameConfig';
 import { v4 as uuid_v4 } from 'uuid';
-import { AttackResult } from './attack/Attack';
+import { AttackResult, AttackState, AttackType } from './attack/Attack';
 
 export class GameEngine {
     constructor(
@@ -34,19 +34,25 @@ export class GameEngine {
         this._gameState = GameState.IN_PROGRESS;
     }
 
-    makeMove(playerId: string, position: Position): AttackResult {
-        const player = this.players.find((player) => player.id === playerId);
+    makeMove(attackerId: string, attackedId: string, positions: Position[]): AttackResult {
+        const player = this.players.find((player) => player.id === attackedId);
         if (!player) throw Error('player not found');
 
-        const result = player.beingAttacked(position);
+        const states = player.beingAttacked(positions);
 
-        if (result === AttackResult.MISS) {
+        if (states.some((state) => state === AttackState.MISS)) {
             this.nextTurn();
         }
 
         this.updateIfWin();
 
-        return result;
+        return {
+            type: AttackType.REGULAR,
+            states,
+            positions,
+            attackerId,
+            attackedId,
+        };
     }
 
     addPlayer(player: Player): void {

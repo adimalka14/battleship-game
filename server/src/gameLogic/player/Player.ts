@@ -1,4 +1,4 @@
-import { AttackResult, AttackType } from '../attack/Attack';
+import { AttackState, AttackType } from '../attack/Attack';
 import { Ship } from '../ship/Ship';
 import { Cell } from '../board/Cell';
 import { Position } from '../board/Position';
@@ -15,23 +15,37 @@ export class Player {
         private _attacks: Map<AttackType, number> = new Map([[AttackType.REGULAR, Infinity]])
     ) {}
 
-    beingAttacked(position: Position): AttackResult {
-        console.log(this._revealedPositions);
-        if (this.isPositionRevealed(position)) throw new Error('Position already revealed');
+    beingAttacked(positions: Position[]): AttackState[] {
+        const attacksState: AttackState[] = [];
 
-        this.revealPosition(position);
+        for (const position of positions) {
+            if (this.isPositionRevealed(position)) throw new Error('Position already revealed');
+        }
 
+        for (const position of positions) {
+            this.revealPosition(position);
+        }
+
+        for (const position of positions) {
+            attacksState.push(this.checkAttackResult(position));
+        }
+        this.updateIfLose();
+
+        return attacksState;
+    }
+
+    checkAttackResult(position: Position): AttackState {
         for (const ship of this._ships) {
             for (let i = 0; i < ship.positions.length; i++) {
                 const { row: x, col: y } = ship.positions[i];
                 if (position.row === x && position.col === y) {
                     ship.hits[i] = true;
-                    this.updateIfLose();
-                    return ship.isSunk() ? AttackResult.SUNK : AttackResult.HIT;
+                    return ship.isSunk() ? AttackState.SUNK : AttackState.HIT;
                 }
             }
         }
-        return AttackResult.MISS;
+
+        return AttackState.MISS;
     }
 
     clone(): Player {

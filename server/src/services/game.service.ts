@@ -83,14 +83,19 @@ export const getGameData = (gameId: string, playerId: string | undefined = undef
     return game.getGameData(playerId);
 };
 
-export const makeMove = (gameId: string, attackerId: string, attactedId: string, position: Position): AttackResult => {
+export const makeMove = (
+    gameId: string,
+    attackerId: string,
+    attactedId: string,
+    positions: Position[]
+): AttackResult => {
     const game = games.get(gameId);
 
     if (!game) throw Error('game not found');
 
     if (game.playerIdTurn() !== attackerId) throw Error('not your turn');
 
-    return game.makeMove(attactedId, position);
+    return game.makeMove(attackerId, attactedId, positions);
 };
 
 export const isGameFinished = (gameId: string): boolean => {

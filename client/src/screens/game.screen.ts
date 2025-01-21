@@ -19,23 +19,11 @@ export function renderGameScreen(data: any) {
             <div class="ship-layer game"></div>
             <div class="cells-layer game"></div>
         </div>
-                
-<!--    <div class="board-container">-->
-<!--        <div class="board-grid">-->
-<!--            <div class="ship-layer game"></div>-->
-<!--            <div class="cells-layer game"></div>-->
-<!--        </div>-->
-<!--    </div>-->
 </div>
         
         
 `);
     bindEvents();
-
-    // $('.cells-layer').css({
-    //     position: 'absolute',
-    //     zIndex: 12,
-    // });
 
     if (data?.gameData) {
         gameState = data.gameData;
@@ -50,22 +38,34 @@ function bindEvents() {
     });
 
     onEvent(EVENTS.UPDATE_BOARD, async (data: any) => {
-        console.log(data?.attackResult);
-        gameState = data.gameData;
-        console.log(data);
+        const turnChange = data?.gameState?.currentTurn !== gameState?.currentTurn || false;
 
-        if (data?.attackResult === 'MISS') {
+        gameState = data.gameData;
+
+        for (let i = 0; i < data.attackResult.positions.length; i++) {
+            const position = data.attackResult.positions[i];
+            if (data.attackResult.states[i] === 'HIT') {
+                await animateHit(position);
+            }
+        }
+
+        if (data.attackResult.states.some((state) => state === 'MISS')) {
             await flipBoard();
         }
 
         updateGameBoard();
     });
 
-    onEvent(EVENTS.GAME_FINISHED, (data: any) => {
-        console.log(data?.attackResult);
-
+    onEvent(EVENTS.GAME_FINISHED, async (data: any) => {
         gameState = data.gameData;
-        console.log(data);
+
+        for (let i = 0; i < data.attackResult.positions.length; i++) {
+            const position = data.attackResult.positions[i];
+            if (data.attackResult.states[i] === 'HIT') {
+                await animateHit(position);
+            }
+        }
+
         updateGameBoard();
         $('.game-state').text(`${gameState?.state} ${gameState?.player?.status}`);
     });
@@ -78,10 +78,7 @@ function attackerEvent() {
         const col = +$cell.attr('data-col');
         emitEvent(EVENTS.PLAYER_SHOOT, {
             playerBeingAttacked: gameState.enemies[0].id,
-            position: {
-                row,
-                col,
-            },
+            positions: [{ row, col }],
         });
     });
 }
@@ -122,3 +119,17 @@ const convertShipsToUIFormat = (ships: Position[][]): Ship[] => {
         };
     });
 };
+
+async function animateHit(position: Position) {
+    const { row, col } = position;
+    const $cell = $(`[data-row="${row}"][data-col="${col}"]`);
+
+    if ($cell.length > 0) {
+        $cell.addClass('hit');
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        console.log('stop');
+        $cell.removeClass('hit');
+    }
+}

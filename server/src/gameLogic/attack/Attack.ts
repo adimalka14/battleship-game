@@ -7,6 +7,14 @@ export interface Attack {
     execute(board: Cell[][], target: Position): void;
 }
 
+export interface AttackResult {
+    type: AttackType;
+    states: AttackState[];
+    positions: Position[];
+    attackedId: string;
+    attackerId: string;
+}
+
 export enum AttackType {
     REGULAR = 'REGULAR',
     PLUS = 'PLUS',
@@ -14,7 +22,7 @@ export enum AttackType {
     NUKED = 'NUKED',
 }
 
-export enum AttackResult {
+export enum AttackState {
     HIT = 'HIT',
     MISS = 'MISS',
     SUNK = 'SUNK',

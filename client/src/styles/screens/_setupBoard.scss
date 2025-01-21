@@ -19,7 +19,8 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  font-size: 4em;
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 4rem) !important;
 
   &.hide{
     display: none;

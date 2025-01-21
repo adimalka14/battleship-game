@@ -1,9 +1,9 @@
 .ship-layer {
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  // pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-size, 10), 1fr);
+  grid-template-rows: repeat(var(--grid-size, 10), 1fr);
 
   &.setup{
     position: absolute;
@@ -24,35 +24,27 @@
 }
 
 .ship {
-  position: absolute !important;
-  z-index: 10;
-  box-sizing: border-box;
+  //grid-column: span 1;
+  //grid-row: span 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
   border: none;
   border-radius: 45%;
 
+
   @mixin ship($area, $color) {
     &.ship-area-#{$area} {
-      //width: calc($area * 2em);
-      // padding-top: calc($area * 2em);
-      //height: 2em;
-      width: 2em;
+     // width: 1fr;
       background-color: $color;
-      height: calc($area * 2em);
-      // background-image: url(`./assets/ships/submarine_2_cells.png`);
+      //height: calc($area * 1fr);
 
       //&[data-direction="horizontal"] {
-      //  background-image: url("./assets/ships/submarine_#{$area}_cells_horizontal.png");
-      //}
-      //&[data-direction="vertical"] {
-      //  background-image: url("./assets/ships/submarine_#{$area}_cells_vertical.png");
-      //  //transform: rotate(90deg);
+      //  grid-column: span auto;
       //}
       //
-      //background-size: 100% 100%;
-      //background-position: center center;
-      //background-repeat: no-repeat;
-      //aspect-ratio: 1 / 1;
-
+      //&[data-direction="vertical"] {
+      //  grid-row: span auto;
+      //}
     }
   }
 
@@ -67,3 +59,13 @@
     opacity: 0.3;
   }
 }
+
+
+//.ship {
+//  position: absolute !important;
+//  z-index: 10;
+//  box-sizing: border-box;
+
+//
+//
+//}

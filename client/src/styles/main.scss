@@ -19,7 +19,7 @@ body {
   align-items: center;
   height: 100%;
   width: 100%;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .background {
@@ -28,7 +28,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('./assets/p.png');
+  background-image: url('./assets/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -47,11 +47,11 @@ h1,.message {
 }
 
 h1{
-  font-size: 6em;
+  font-size: clamp(2rem, 5vw, 4rem);
 }
 
 .message{
-  font-size: 2em;
+  font-size: clamp(1.5rem, 3vw, 3rem);
 }
 
 input {

@@ -7,22 +7,26 @@ $board-length: 10;
   align-items: center;
   flex-direction: column;
   gap: 1em;
+  width: 100%;
+  height: 100%;
 }
 
 .board-container {
-  height: calc($board-length * $cell-size);
+  width: min(90vw, 50vh);
+  height: min(90vw, 50vh);
+  aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(0, 196, 255, 0.10);
-  padding: 2em;
+  padding: 1em;
   border-radius: 10%;
 }
 
 .board-grid {
+  width: 100%;
+  height: 100%;
   position: relative;
-  width: 20em;
-  height: 20em;
   border: 5px solid #1e90ff;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(30, 144, 255, 0.7);
@@ -32,7 +36,6 @@ $board-length: 10;
 .flip-board {
   -webkit-animation: flip-scale-down-diag-2 0.5s linear both;
   animation: flip-scale-down-diag-2 0.5s linear both;
-
 }
 
 .cells-layer {
@@ -45,12 +48,16 @@ $board-length: 10;
     z-index: 10;
     top: 0;
     left: 0;
-
   }
 
+  width: 100%;
+  height: 100%;
+
   display: grid;
-  grid-template-columns: repeat($board-length, $cell-size);
-  grid-template-rows: repeat($board-length, $cell-size);
+
+  grid-template-columns: repeat($board-length, 1fr);
+  grid-template-rows: repeat($board-length,1fr);
+
   box-sizing: border-box;
 }
 
@@ -72,8 +79,18 @@ $board-length: 10;
     position: absolute;
     top: 15%;
     left: 15%;
+    max-width: 100%;
+    max-height: 100%;
     width: 70%;
     height: 70%;
+  }
+
+  &.hit {
+    .icon{
+      position: absolute;
+      background-image: url("./assets/explosion.gif");
+      background-size: cover;
+    }
   }
 
   &[data-value="not-revealed"] {
@@ -91,17 +108,16 @@ $board-length: 10;
     box-shadow: inset 0 0 10px rgba(255, 99, 71, 0.8),inset 0 0 8px rgba(255, 69, 0, 0.5);
 
     .icon {
-      background: url('./assets/corrected_fire_sprite_sheet.png');
+      background: url("./assets/fire-flame.gif");
+      //background-image: url("./assets/explosion.gif");
+
       background-size: cover;
-      background-repeat: no-repeat;
-      animation: fireAnimation 1.5s steps(4) infinite alternate;
-      transform-origin: center;
+      animation: fireAnimation 1.5s infinite alternate;
     }
   }
 
   &[data-value="sunk-ship"] {
     box-shadow: inset 0 0 10px rgba(18, 17, 17, 0.59);
-    //background-color: rgb(18, 17, 17);
 
     .icon{
       background: url('./assets/death.png') no-repeat center center;

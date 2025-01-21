@@ -41,7 +41,7 @@ export function renderShipsOnBoard(ships: Ship[], draggable: boolean = false) {
     $('.board-container .ship-layer').empty();
 
     ships.forEach((ship) => {
-        const $shipEl = createShipElement(ship, getCellSize(), draggable);
+        const $shipEl = createShipElement(ship, draggable);
         $('.board-container .ship-layer').append($shipEl);
     });
 }
