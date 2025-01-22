@@ -1,0 +1,71 @@
+.ship-layer {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-size, 10), 1fr);
+  grid-template-rows: repeat(var(--grid-size, 10), 1fr);
+
+  &.setup{
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &.game{
+    position: static;
+    pointer-events: none;
+
+    .ship{
+      opacity: 0.6 !important;
+    }
+  }
+}
+
+.ship {
+  //grid-column: span 1;
+  //grid-row: span 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  border: none;
+  border-radius: 45%;
+
+
+  @mixin ship($area, $color) {
+    &.ship-area-#{$area} {
+     // width: 1fr;
+      background-color: $color;
+      //height: calc($area * 1fr);
+
+      //&[data-direction="horizontal"] {
+      //  grid-column: span auto;
+      //}
+      //
+      //&[data-direction="vertical"] {
+      //  grid-row: span auto;
+      //}
+    }
+  }
+
+  @include ship(1, red);
+  @include ship(2, blue);
+  @include ship(3, yellow);
+  @include ship(4, green);
+  @include ship(5, purple);
+
+  &[data-overlapping="true"] {
+    border: 3px solid rgba(255, 60, 60, 0.98);
+    opacity: 0.3;
+  }
+}
+
+
+//.ship {
+//  position: absolute !important;
+//  z-index: 10;
+//  box-sizing: border-box;
+
+//
+//
+//}
