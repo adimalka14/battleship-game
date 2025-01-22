@@ -40,13 +40,15 @@ export function renderSetupBoardScreen() {
             <h1>Arrange your ships</h1>
             <p class="message">players ready:<span class="waiting-players">0</span>/<span class="total-players">${STORAGE.GAME_CONFIG.numOfPlayers}</span></p>
             <div class="board-container">
-            <div class="board-grid">
-                <div class="cells-layer setup">${boardMarkup}</div>
-                <div class="ship-layer setup"></div>
-             </div>  
-             </div>   
-            <button id="random-btn" class="btn">Random</button>
-            <button id="start-btn" class="btn">Start</button>
+                <div class="board-grid">
+                    <div class="cells-layer setup">${boardMarkup}</div>
+                    <div class="ship-layer setup"></div>
+                </div>  
+            </div>
+            <div class="btn-container">  
+                <button id="random-btn" class="btn">Random</button>
+                <button id="start-btn" class="btn">Start</button>
+            </div> 
         </div>
         <div class="game-message message hide">
             <p>waiting for opponent...</p>
@@ -60,7 +62,6 @@ function initShipsWithRotation() {
     const cellSize = getCellSize();
     let isDragging = false;
 
-    // הסר מאזינים קיימים לפני הגדרת אינטראקציה חדשה
     interact('.ship').unset();
 
     interact('.ship')
@@ -94,14 +95,6 @@ function initShipsWithRotation() {
                 let newRow = Math.round(event.dy / cellSize) + ship.startPosition?.row;
                 let newCol = Math.round(event.dx / cellSize) + ship.startPosition?.col;
 
-                // if (ship.direction === Direction.HORIZONTAL) {
-                //     newRow = Math.max(0, Math.min(newRow, BOARD_SIZE));
-                //     newCol = Math.max(0, Math.min(newCol, BOARD_SIZE - ship.area));
-                // } else {
-                //     newRow = Math.max(0, Math.min(newRow, BOARD_SIZE - ship.area));
-                //     newCol = Math.max(0, Math.min(newCol, BOARD_SIZE));
-                // }
-
                 updateShip(ship, { row: newRow, col: newCol });
                 updateAllShipsOverlap(STORAGE.SHIPS as Ship[]);
                 $ship.css({
@@ -127,97 +120,6 @@ function initShipsWithRotation() {
             }, 500);
         });
 
-    // containment: '.ship-layer',
-    // grid: [cellSize, cellSize],
-    // helper: 'original',
-    // scroll: false,
-    //
-    // start: function (event, ui) {
-    //     const $ship = $(event.target);
-    //     const shipId = $ship.data('ship-id');
-    //     const ship = findShipById(STORAGE.SHIPS as Ship[], shipId);
-    //
-    //     if (ship && ship.startPosition) {
-    //         initialRow = ship.startPosition.row;
-    //         initialCol = ship.startPosition.col;
-    //     }
-    // },
-    //
-    // drag: function (event, ui) {
-    //     const $ship = $(event.target);
-    //     const shipId = $ship.data('ship-id');
-    //     const ship = findShipById(STORAGE.SHIPS as Ship[], shipId);
-    //
-    //     if (ship) {
-    //         const offsetRow = Math.round(ui.position.top / cellSize);
-    //         const offsetCol = Math.round(ui.position.left / cellSize);
-    //
-    //         const currentRow = initialRow + offsetRow;
-    //         const currentCol = initialCol + offsetCol;
-    //
-    //         // $ship.css({
-    //         //     gridRowStart: currentRow,
-    //         //     gridColumnStart: currentCol,
-    //         // });
-    //
-    //         updateShip(ship, { row: currentRow, col: currentCol });
-    //         updateAllShipsOverlap(STORAGE.SHIPS as Ship[]);
-    //     }
-    // },
-    //
-    // stop: function (event, ui) {
-    //     const $ship = $(event.target);
-    //     const shipId = $ship.data('ship-id');
-    //     const ship = findShipById(STORAGE.SHIPS as Ship[], shipId);
-    //
-    //     if (ship) {
-    //         const offsetRow = Math.round(ui.position.top / cellSize);
-    //         const offsetCol = Math.round(ui.position.left / cellSize);
-    //
-    //         const finalRow = initialRow + offsetRow;
-    //         const finalCol = initialCol + offsetCol;
-    //
-    //         updateShip(ship, { row: finalRow, col: finalCol });
-    //
-    //         $ship.css({
-    //             gridRowStart: finalRow + 1,
-    //             gridColumnStart: finalCol + 1,
-    //             gridColumnEnd: ship.direction === Direction.HORIZONTAL ? `span ${ship.area}` : 'span 1',
-    //             gridRowEnd: ship.direction === Direction.VERTICAL ? `span ${ship.area}` : 'span 1',
-    //             top: '',
-    //             left: '',
-    //         });
-    //
-    //         if ($ship.attr('data-overlapping') === 'true') {
-    //             alert('Ships are still overlapping! Adjust the position.');
-    //         }
-    //     }
-    // },
-    // drag: function (event, ui) {
-    //     const $ship = $(event.target);
-    //     const shipId = $ship.data('ship-id');
-    //     const ship = findShipById(STORAGE.SHIPS as Ship[], shipId);
-    //
-    //     if (ship) {
-    //         const newPosition: Position = {
-    //             row: Math.round(ui.position.top / cellSize),
-    //             col: Math.round(ui.position.left / cellSize),
-    //         };
-    //         updateShip(ship, newPosition);
-    //     }
-    //
-    //     updateAllShipsOverlap(STORAGE.SHIPS as Ship[]);
-    // },
-    //
-    // stop: function (event, ui) {
-    //     const $ship = $(event.target);
-    //
-    //     if ($ship.attr('data-overlapping') === 'true') {
-    //         alert('Ships are still overlapping! Adjust the position.');
-    //     }
-    // },
-    //});
-
     $('.ship').on('click', function (event) {
         if (isDragging) return;
         const $ship = $(event.currentTarget);
@@ -242,35 +144,6 @@ function initShipsWithRotation() {
         updateAllShipsOverlap(STORAGE.SHIPS as Ship[]);
         initShipsWithRotation();
     });
-
-    // $('.ship').on('click', function (event) {
-    //     const $ship = $(event.currentTarget);
-    //     const shipId = $ship.data('ship-id') as string;
-    //     const cellSize = getCellSize();
-    //
-    //     const shipState = STORAGE.SHIPS as Ship[];
-    //     const ship: Ship | undefined = findShipById(shipState, shipId);
-    //     if (!ship) {
-    //         console.error('Ship not found');
-    //         return;
-    //     }
-    //
-    //     const currentDirection = ship.direction;
-    //     const newDirection = currentDirection === Direction.HORIZONTAL ? Direction.VERTICAL : Direction.HORIZONTAL;
-    //
-    //     const shipOffset = $ship.offset();
-    //     const clickX = event.pageX - shipOffset!.left;
-    //     const clickY = event.pageY - shipOffset!.top;
-    //     const clickIndex =
-    //         currentDirection === Direction.HORIZONTAL ? Math.floor(clickX / cellSize) : Math.floor(clickY / cellSize);
-    //
-    //     flipShip(ship, clickIndex, BOARD_SIZE);
-    //
-    //     $ship.data('direction', newDirection);
-    //     renderShipsOnBoard(STORAGE.SHIPS as Ship[], true);
-    //     updateAllShipsOverlap(STORAGE.SHIPS as Ship[]);
-    //     initShipsWithRotation();
-    // });
 }
 
 const bindEvents = () => {

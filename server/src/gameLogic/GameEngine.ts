@@ -116,10 +116,7 @@ export class GameEngine {
             name: player?.name || '',
             status: player?.status,
             board: player?.getBoard(this.config.boardSize, true),
-            ships: player?.ships?.map((ship) => ({
-                positions: ship.positions,
-                hits: ship.hits,
-            })),
+            ships: player?.ships?.map((ship) => ship.positions),
         } as GameData['player'];
 
         const enemiesData = this.players
@@ -128,8 +125,11 @@ export class GameEngine {
                 id: enemy.id,
                 name: enemy.name || '',
                 status: enemy.status,
-                board: enemy.getBoard(this.config.boardSize, false),
-                sunkShips: enemy.ships?.filter((ship) => ship.isSunk()).map((ship) => ship.positions),
+                board: enemy.getBoard(this.config.boardSize, this._gameState === GameState.FINISHED),
+                sunkShips:
+                    this._gameState !== GameState.FINISHED
+                        ? enemy.ships?.filter((ship) => ship.isSunk()).map((ship) => ship.positions)
+                        : enemy.ships?.map((ship) => ship.positions),
             })) as GameData['enemies'];
 
         return {

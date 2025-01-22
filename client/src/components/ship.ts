@@ -48,26 +48,6 @@ export function flipShip(ship: Ship, clickIndex: number, boardSize: number): voi
     }
 }
 
-// export function flipShip(ship: Ship, clickIndex: number, boardSize: number): void {
-//     const { row: currRow, col: currCol } = ship.startPosition;
-//     const currentDirection = ship.direction;
-//     const shipArea = ship.area;
-//
-//     if (currentDirection === Direction.VERTICAL) {
-//         ship.startPosition = {
-//             row: Math.max(0, currRow + clickIndex),
-//             col: Math.max(0, Math.min(currCol - (shipArea - clickIndex - 1), boardSize - shipArea)),
-//         };
-//         ship.direction = Direction.HORIZONTAL;
-//     } else {
-//         ship.startPosition = {
-//             row: Math.max(0, Math.min(Math.max(0, currRow - clickIndex), boardSize - shipArea)),
-//             col: currCol + clickIndex,
-//         };
-//         ship.direction = Direction.VERTICAL;
-//     }
-// }
-
 export function createShipElement(ship: Ship, draggable: boolean): JQuery<HTMLElement> {
     const { row, col } = ship.startPosition;
 
@@ -84,30 +64,6 @@ export function createShipElement(ship: Ship, draggable: boolean): JQuery<HTMLEl
         'data-area': ship.area,
     });
 }
-
-// export function createShipElement(ship: Ship, cellSize: number, draggable: boolean): JQuery<HTMLElement> {
-//     const { row, col } = ship.startPosition;
-//     const topPx = row * cellSize;
-//     const leftPx = col * cellSize;
-//
-//     const widthPx = ship.direction === Direction.HORIZONTAL ? ship.area * cellSize : cellSize;
-//
-//     const heightPx = ship.direction === Direction.VERTICAL ? ship.area * cellSize : cellSize;
-//
-//     return $('<div>', {
-//         class: `ship ship-area-${ship.area}`,
-//         css: {
-//             top: `${topPx}px`,
-//             left: `${leftPx}px`,
-//             width: `${widthPx}px`,
-//             height: `${heightPx}px`,
-//         },
-//         'data-ship-id': ship.id,
-//         'data-direction': ship.direction,
-//         'data-area': ship.area,
-//         //draggable: draggable,
-//     });
-// }
 
 export function placeShipsRandomly(ships: Ship[], boardSize: number): Ship[] {
     const occupiedPositions: Set<string> = new Set();
@@ -230,28 +186,13 @@ export function isShipOverlapping(shipA: Ship, shipB: Ship): boolean {
     return shipACells.some((cellA) => shipBCells.some((cellB) => cellA.row === cellB.row && cellA.col === cellB.col));
 }
 
-// export function isShipOverlapping(shipA: Ship, shipB: Ship): boolean {
-//     if (!shipA.startPosition || !shipB.startPosition) {
-//         return false;
-//     }
-//
-//     const shipACells: Position[] = [];
-//     for (let i = 0; i < shipA.area; i++) {
-//         shipACells.push(
-//             shipA.direction === Direction.HORIZONTAL
-//                 ? { row: shipA.startPosition.row, col: shipA.startPosition.col + i }
-//                 : { row: shipA.startPosition.row + i, col: shipA.startPosition.col }
-//         );
-//     }
-//
-//     const shipBCells: Position[] = [];
-//     for (let i = 0; i < shipB.area; i++) {
-//         shipBCells.push(
-//             shipB.direction === Direction.HORIZONTAL
-//                 ? { row: shipB.startPosition.row, col: shipB.startPosition.col + i }
-//                 : { row: shipB.startPosition.row + i, col: shipB.startPosition.col }
-//         );
-//     }
-//
-//     return shipACells.some((cellA) => shipBCells.some((cellB) => cellA.row === cellB.row && cellA.col === cellB.col));
-// }
+export const convertShipsToUIFormat = (ships: Position[][]): Ship[] => {
+    return ships.map((ship, i) => {
+        return {
+            id: `ship-${ship.length}-${i}`,
+            startPosition: ship[0],
+            direction: ship[0].row === ship[1].row ? Direction.HORIZONTAL : Direction.VERTICAL,
+            area: ship.length as number,
+        };
+    });
+};

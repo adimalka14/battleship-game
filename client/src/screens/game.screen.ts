@@ -1,10 +1,11 @@
 import $ from 'jquery';
 import { IDS, EVENTS } from '../utils/constants';
-import { emitEvent, onEvent } from '../utils/socket';
+import { emitEvent, onEvent, removeEvent } from '../utils/socket';
 import { renderBoard, renderShipsOnBoard } from '../components/board';
+import { convertShipsToUIFormat } from '../components/ship';
 import { renderOpponentSelectionScreen } from './opponentSelection.screen';
-import { Direction, Ship } from '../interfaces/Ship';
 import { Position } from '../interfaces/Position';
+import { renderGameResultScreen } from './gameResult.screen';
 
 let gameState: any;
 
@@ -42,32 +43,23 @@ function bindEvents() {
 
         gameState = data.gameData;
 
-        for (let i = 0; i < data.attackResult.positions.length; i++) {
-            const position = data.attackResult.positions[i];
-            if (data.attackResult.states[i] === 'HIT') {
-                await animateHit(position);
-            }
+        for (let i = 0; i < data?.attackResult?.positions?.length; i++) {
+            const position = data?.attackResult?.positions[i];
+            const result = data?.attackResult?.states[i].toLowerCase();
+            await animateResult(result === 'sunk' ? 'hit' : result, position);
         }
 
-        if (data.attackResult.states.some((state) => state === 'MISS')) {
+        if (gameState?.state === 'FINISHED') return;
+
+        if (data?.attackResult?.states?.some((state) => state === 'MISS')) {
             await flipBoard();
         }
 
         updateGameBoard();
     });
 
-    onEvent(EVENTS.GAME_FINISHED, async (data: any) => {
-        gameState = data.gameData;
-
-        for (let i = 0; i < data.attackResult.positions.length; i++) {
-            const position = data.attackResult.positions[i];
-            if (data.attackResult.states[i] === 'HIT') {
-                await animateHit(position);
-            }
-        }
-
-        updateGameBoard();
-        $('.game-state').text(`${gameState?.state} ${gameState?.player?.status}`);
+    onEvent(EVENTS.GAME_FINISHED, (data: any) => {
+        renderGameResultScreen(data);
     });
 }
 
@@ -105,31 +97,19 @@ function updateGameBoard() {
     } else {
         $('.game-state').text('Wait for opponent turn');
         $('.cells-layer').html(renderBoard(gameState.player.board));
-        renderShipsOnBoard(convertShipsToUIFormat(gameState?.player?.ships.map((ship) => ship.positions)));
+        renderShipsOnBoard(convertShipsToUIFormat(gameState?.player?.ships));
     }
 }
 
-const convertShipsToUIFormat = (ships: Position[][]): Ship[] => {
-    return ships.map((ship, i) => {
-        return {
-            id: `ship-${ship.length}-${i}`,
-            startPosition: ship[0],
-            direction: ship[0].row === ship[1].row ? Direction.HORIZONTAL : Direction.VERTICAL,
-            area: ship.length as number,
-        };
-    });
-};
-
-async function animateHit(position: Position) {
+async function animateResult(result: string, position: Position) {
     const { row, col } = position;
     const $cell = $(`[data-row="${row}"][data-col="${col}"]`);
 
     if ($cell.length > 0) {
-        $cell.addClass('hit');
+        $cell.addClass(result);
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        console.log('stop');
-        $cell.removeClass('hit');
+        $cell?.removeClass(result);
     }
 }

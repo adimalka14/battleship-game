@@ -71,8 +71,8 @@ export class Player {
         const board = new Array(boardSize).fill(null).map(() => new Array(boardSize).fill(Cell.NOT_REVEALED));
 
         for (const position of this._revealedPositions) {
-            const [y, x] = position.split(',').map(Number);
-            board[y][x] = Cell.EMPTY;
+            const [x, y] = position.split(',').map(Number);
+            board[x][y] = Cell.EMPTY;
         }
 
         for (const ship of this._ships) {

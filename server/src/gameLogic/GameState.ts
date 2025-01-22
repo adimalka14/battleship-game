@@ -10,12 +10,7 @@ export interface GameData {
         name: string;
         status: PlayerStatus;
         board: Cell[][] | undefined;
-        ships:
-            | {
-                  positions: Position[];
-                  hits: boolean[];
-              }
-            | undefined;
+        ships: Position[][] | undefined;
     };
     enemies?: {
         id: string;

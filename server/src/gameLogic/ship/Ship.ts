@@ -5,11 +5,15 @@ export class Ship {
         public positions: Position[] = [],
         public hits: boolean[] = []
     ) {
-        this.hits = new Array(positions.length).fill(false);
+        this.hits = this.hits || new Array(positions.length).fill(false);
     }
 
     clone(): Ship {
-        return new Ship([...this.positions], [...this.hits]);
+        return new Ship(
+            //this.positions.map((pos) => ({ row: pos.row, col: pos.col })),
+            [...this.positions],
+            [...this.hits]
+        );
     }
 
     addPosition(position: Position): void {
