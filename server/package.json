@@ -13,6 +13,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "cookie": "^1.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -22,6 +23,7 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@types/cookie": "^1.0.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/socket.io": "^3.0.2",
