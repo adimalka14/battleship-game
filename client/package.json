@@ -4,24 +4,24 @@
   "description": "client side for battleship game",
   "private": true,
   "scripts": {
-    "build:webpack": "webpack --watch --config webpack.config.js",
+    "build": "webpack --mode production --config webpack.config.js",
+    "build:dev": "webpack --mode development --watch --config webpack.config.js",
     "start": "live-server dist",
     "sass:watch": "sass --watch src/styles/main.scss:dist/styles/styles.css",
+    "sass:build": "sass src/styles/main.scss dist/styles/styles.css --style compressed",
     "test": "jest"
   },
   "author": "Adi Malka",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.7",
+    "dotenv-expand": "^12.0.1",
     "interactjs": "^1.10.27",
     "jquery": "^3.7.1",
-    "jquery-ui": "^1.14.1",
-    "jquery-ui-rotatable": "^1.1.0",
-    "jquery-ui-touch-punch": "^0.2.3",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.32",
-    "@types/jqueryui": "^1.12.23",
     "live-server": "^1.2.2",
     "prettier": "^3.4.2",
     "sass": "^1.83.0",

@@ -2,7 +2,7 @@ import { Position } from './Position';
 
 export interface Ship {
     id: string;
-    startPosition: Position | null;
+    startPosition: Position;
     area: number;
     direction: Direction;
 }
