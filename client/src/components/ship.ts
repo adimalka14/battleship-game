@@ -9,7 +9,7 @@ export function defineShips(shipsConfig: any[]): Ship[] {
         for (let i = 0; i < ship.count; i++) {
             ships.push({
                 id: `ship-${ship.area}-${i}`,
-                startPosition: null,
+                startPosition: { row: 0, col: 0 },
                 direction: Direction.HORIZONTAL,
                 area: ship.area as number,
             });

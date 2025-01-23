@@ -1,8 +1,5 @@
 import $ from 'jquery';
-import 'jquery-ui/ui/widgets/draggable';
-import 'jquery-ui/ui/widgets/droppable';
 import interact from 'interactjs';
-
 import { EVENTS, IDS } from '../utils/constants';
 import STORAGE from '../utils/storage';
 import {

@@ -51,7 +51,7 @@ function bindEvents() {
 
         if (gameState?.state === 'FINISHED') return;
 
-        if (data?.attackResult?.states?.some((state) => state === 'MISS')) {
+        if (data?.attackResult?.states?.some((state: 'MISS' | 'HIT' | 'SUNK') => state === 'MISS')) {
             await flipBoard();
         }
 
@@ -66,8 +66,15 @@ function bindEvents() {
 function attackerEvent() {
     $('.board-cell').on('click', (e) => {
         const $cell = $(e.currentTarget);
-        const row = +$cell.attr('data-row');
-        const col = +$cell.attr('data-col');
+
+        if (!$cell || !$cell.length) return;
+
+        const row = ($cell?.attr('data-row') as unknown as number) || -1;
+        const col = ($cell?.attr('data-col') as unknown as number) || -1;
+        const boardSize = gameState?.config?.boardSize as number;
+
+        if (row < 0 || boardSize <= row || col < 0 || boardSize <= col) return;
+
         emitEvent(EVENTS.PLAYER_SHOOT, {
             playerBeingAttacked: gameState.enemies[0].id,
             positions: [{ row, col }],
