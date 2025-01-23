@@ -2,9 +2,15 @@ import http from 'http';
 import app from './app';
 import { Server as SocketIoServer } from 'socket.io';
 import setupSockets from './sockets/index';
+import { PORT, UI_URL } from './utils/env';
 
 const server = http.createServer(app);
-const io = new SocketIoServer(server);
+const options = {
+    cors: { origin: UI_URL, methods: ['GET', 'POST'], credentials: true },
+};
+console.log('io options', options);
+const io = new SocketIoServer(server, options);
+
 setupSockets(io);
 
-server.listen(3000, () => console.log('listening on PORT:3000'));
+server.listen(PORT, () => console.log('listening on PORT:3000'));

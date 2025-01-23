@@ -1,25 +1,34 @@
 import { GameConfig } from './GameConfig';
 import { Cell } from './board/Cell';
 import { Position } from './board/Position';
+import { PlayerStatus } from './player/Player';
 
 export interface GameData {
     gameId: string;
-    players: {
+    player?: {
         id: string;
         name: string;
-        board: Cell[][];
-        ships: {
-            positions: Position[];
-            hits: Position[];
-        }[];
+        status: PlayerStatus;
+        board: Cell[][] | undefined;
+        ships: Position[][] | undefined;
+    };
+    enemies?: {
+        id: string;
+        name: string;
+        status: PlayerStatus;
+        board: Cell[][] | undefined;
+        sunkShips: Position[][];
     }[];
-    currentTurn: string;
+    currentTurn?: string | undefined;
     config: GameConfig;
     state: GameState;
+    totalPlayers: number;
+    waitingPlayers: number;
 }
 
 export enum GameState {
-    WAITING_FOR_PLAYERS = 0,
-    IN_PROGRESS = 1,
-    FINISHED = 2
+    WAITING_FOR_PLAYERS = 'WAITING_FOR_PLAYERS',
+    SETTING_UP_BOARD = 'SETTING_UP_BOARD',
+    IN_PROGRESS = 'IN_PROGRESS',
+    FINISHED = 'FINISHED',
 }
