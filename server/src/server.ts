@@ -6,7 +6,6 @@ import { PORT, UI_URL } from './utils/env';
 
 const server = http.createServer(app);
 const options = {
-    // cookie: true,
     cors: { origin: UI_URL, methods: ['GET', 'POST'], credentials: true },
 };
 console.log('io options', options);

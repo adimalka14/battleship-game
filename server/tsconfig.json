@@ -2,7 +2,7 @@
   "ts-node": {
     "files": true
   },
-  "files": ["src/types/socket.io.d.ts", "src/server.ts"],
+  "files": ["src/server.ts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 

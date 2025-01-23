@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { IDS, EVENTS } from '../utils/constants';
-import { emitEvent, onEvent, removeEvent } from '../utils/socket';
+import { emitEvent, onEvent } from '../utils/socket';
 import { renderBoard, renderShipsOnBoard } from '../components/board';
 import { convertShipsToUIFormat } from '../components/ship';
 import { renderOpponentSelectionScreen } from './opponentSelection.screen';
