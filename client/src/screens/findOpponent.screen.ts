@@ -24,7 +24,6 @@ const bindEvents = () => {
     });
 
     onEvent(EVENTS.PLAYER_LEFT_LOBBY, (data: any) => {
-        console.log(data);
         updatePlayersNumber(data.waitingPlayers, data.totalPlayers);
     });
 
@@ -36,7 +35,6 @@ const bindEvents = () => {
     });
 
     onEvent(EVENTS.PLAYER_JOINED, (data: any) => {
-        console.log(data);
         updatePlayersNumber(data?.waitingPlayers, data.totalPlayers);
         if (data.state === 'SETTING_UP_BOARD') {
             renderSetupBoardScreen();

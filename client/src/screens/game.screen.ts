@@ -10,7 +10,6 @@ import { renderGameResultScreen } from './gameResult.screen';
 let gameState: any;
 
 export function renderGameScreen(data: any) {
-    console.log(data);
     $(IDS.APP).html(`
 <button id="exit-btn" class="btn"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 <div class="game-board">

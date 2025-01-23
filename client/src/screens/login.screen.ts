@@ -21,7 +21,6 @@ export const renderLoginScreen = () => {
 const bindEvents = () => {
     $(startBtnID).on('click', () => {
         STORAGE.USERNAME = $(`#username`).val() as string;
-        console.log('connecting');
         connectSocket();
 
         onEvent('error', (data: any) => {

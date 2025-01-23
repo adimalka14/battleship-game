@@ -79,14 +79,11 @@ function initShipsWithRotation() {
         })
         .on('dragstart', function (event) {
             isDragging = true;
-            console.log('drag start');
         })
         .on('dragmove', function (event) {
             const $ship = $(event.target);
             const shipId = $ship.data('ship-id');
             const ship = findShipById(STORAGE.SHIPS as Ship[], shipId);
-
-            console.log(Math.round(event.dx / cellSize), Math.round(event.dy / cellSize));
 
             if (ship) {
                 let newRow = Math.round(event.dy / cellSize) + ship.startPosition?.row;
@@ -124,10 +121,7 @@ function initShipsWithRotation() {
         const cellSize = getCellSize();
 
         const ship = findShipById(STORAGE.SHIPS as Ship[], shipId);
-        if (!ship) {
-            console.error('Ship not found');
-            return;
-        }
+        if (!ship) return;
 
         const shipOffset = $ship.offset();
         const clickX = event.pageX - shipOffset!.left;
@@ -171,7 +165,6 @@ const bindEvents = () => {
     });
 
     onEvent(EVENTS.PLAYER_LEFT_DURING_SETUP, (data: any) => {
-        console.log('player left during setup');
         renderFindOpponentScreen();
     });
 
@@ -180,7 +173,6 @@ const bindEvents = () => {
     });
 
     onEvent(EVENTS.ALL_PLAYERS_READY, (data: any) => {
-        console.log(data);
         renderGameScreen(data);
     });
 };

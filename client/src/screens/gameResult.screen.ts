@@ -7,7 +7,6 @@ import { renderOpponentSelectionScreen } from './opponentSelection.screen';
 
 export function renderGameResultScreen(data: any) {
     const { gameData } = data;
-    console.log(data);
     $(IDS.APP).html(`
 <div class="game-board">
     <div class="game-state message result">${gameData?.state} ${gameData?.player?.status}</div>
