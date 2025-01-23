@@ -1,7 +1,8 @@
 import { io } from 'socket.io-client';
 import { event } from 'jquery';
+import { SERVER_URL } from './env';
 
-const socket = io('https://battleship-game-api.onrender.com', {
+const socket = io('localhost:3000', {
     withCredentials: true,
     autoConnect: false,
 });

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { Ship, Direction } from '../interfaces/Ship';
 import { Position } from '../interfaces/Position';
 
-export function defineShips(shipsConfig: any[]): Ship[] {
+export function defineShips(shipsConfig: any[], boardSize: number): Ship[] {
     const ships: Ship[] = [];
 
     shipsConfig.forEach((ship: any) => {
@@ -15,6 +15,8 @@ export function defineShips(shipsConfig: any[]): Ship[] {
             });
         }
     });
+
+    placeShipsRandomly(ships, boardSize);
 
     return ships;
 }

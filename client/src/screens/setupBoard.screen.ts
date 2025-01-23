@@ -24,10 +24,7 @@ let BOARD_SIZE: number;
 
 export function renderSetupBoardScreen() {
     BOARD_SIZE = STORAGE.GAME_CONFIG.boardSize;
-    STORAGE.SHIPS = STORAGE.SHIPS ?? defineShips(STORAGE.GAME_CONFIG.ships);
-    !isAllShipsPlaced(STORAGE.SHIPS) && placeShipsRandomly(STORAGE.SHIPS, BOARD_SIZE);
-
-    console.log(STORAGE.SHIPS);
+    STORAGE.SHIPS = STORAGE.SHIPS ?? defineShips(STORAGE.GAME_CONFIG.ships, BOARD_SIZE);
 
     const boardMarkup = renderBoard();
 
