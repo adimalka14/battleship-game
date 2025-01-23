@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -25,4 +26,9 @@ module.exports = {
         open: true,
         hot: true,
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.SERVER_URL': JSON.stringify(process.env.SERVER_URL || 'http://localhost:3000'),
+        }),
+    ],
 };
