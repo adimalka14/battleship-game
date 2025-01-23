@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { event } from 'jquery';
 import { SERVER_URL } from './env';
 
-const socket = io('localhost:3000', {
+const socket = io(SERVER_URL, {
     withCredentials: true,
     autoConnect: false,
 });
