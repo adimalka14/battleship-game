@@ -68,8 +68,8 @@ function attackerEvent() {
 
         if (!$cell || !$cell.length) return;
 
-        const row = ($cell?.attr('data-row') as unknown as number) || -1;
-        const col = ($cell?.attr('data-col') as unknown as number) || -1;
+        const row = +($cell?.attr('data-row') as unknown as number);
+        const col = +($cell?.attr('data-col') as unknown as number);
         const boardSize = gameState?.config?.boardSize as number;
 
         if (row < 0 || boardSize <= row || col < 0 || boardSize <= col) return;
