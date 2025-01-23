@@ -1,9 +1,11 @@
-import { config } from 'dotenv';
-import { expand } from 'dotenv-expand';
-import path from 'path';
+//import { config } from 'dotenv';
+//import { expand } from 'dotenv-expand';
+//import path from 'path';
 
-const configPath = path.resolve(__dirname, '..', '..', `.env.${process.env.NODE_ENV ?? 'dev'}`);
+//const configPath = path.resolve(__dirname, '..', '..', `.env.${process.env.NODE_ENV ?? 'dev'}`);
 
-expand(config({ path: configPath }));
+//console.log(configPath);
 
-export const SERVER_URL = process.env.SERVER_URL;
+//expand(config({ path: configPath }));
+
+export const SERVER_URL = (process.env.SERVER_URL as string) || 'http://localhost:3000';
