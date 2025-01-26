@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { v4 as uuid_v4 } from 'uuid';
 import { generateAccessToken } from '../utils/token';
+import { NODE_ENV } from '../utils/env';
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -19,7 +20,7 @@ export const loginCtrl = async (req: Request, res: Response, next: NextFunction)
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        sameSite: 'none',
+        sameSite: NODE_ENV === 'production' ? 'strict' : 'none',
         secure: true,
         maxAge: DAY,
     });

@@ -37,6 +37,7 @@ const bindEvents = () => {
 };
 
 async function sendPostRequest(route: string, data: any) {
+    console.log(SERVER_URL + route);
     const response = await fetch(`${SERVER_URL}${route}`, {
         method: 'POST',
         headers: {

@@ -1,10 +1,18 @@
 import { io } from 'socket.io-client';
-import { SERVER_URL } from './env';
+//import { SERVER_URL } from './env';
+console.log(process.env.NODE_ENV);
+const SERVER_URL = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:3000';
 
 const socket = io(SERVER_URL, {
     withCredentials: true,
     autoConnect: false,
+    path: '/socket.io',
 });
+
+// const socket = io(SERVER_URL, {
+//     withCredentials: true,
+//     autoConnect: false,
+// });
 
 export const connectSocket = () => socket.connect();
 

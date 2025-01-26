@@ -2,7 +2,9 @@ import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
 import path from 'path';
 
-const configPath = path.resolve(__dirname, '..', '..', `.env.${process.env.NODE_ENV ?? 'dev'}`);
+export const NODE_ENV = process.env.NODE_ENV ?? 'dev';
+
+const configPath = path.resolve(__dirname, '..', '..', `.env.${NODE_ENV}`);
 
 expand(config({ path: configPath }));
 

@@ -7,6 +7,7 @@ import { PORT, UI_URL } from './utils/env';
 const server = http.createServer(app);
 const options = {
     cors: { origin: UI_URL, methods: ['GET', 'POST'], credentials: true },
+    path: '/socket.io',
 };
 console.log('io options', options);
 const io = new SocketIoServer(server, options);
