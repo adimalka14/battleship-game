@@ -3,3 +3,9 @@
   to = "https://battleship-game-api.onrender.com/api/:splat"
   status = 200
   force = true
+
+[[redirects]]
+from = "/socket.io/*"
+to = "https://battleship-game-api.onrender.com/socket.io/:splat"
+status = 200
+force = true
