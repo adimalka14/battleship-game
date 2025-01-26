@@ -3,9 +3,9 @@ import authRouter from './auth.router';
 import app from '../app';
 
 export const initAppRoutes = (app: Express) => {
-    app.use('/auth', authRouter);
+    app.use('/api/auth', authRouter);
 
-    app.use('/', (req, res) => {
+    app.use('/api', (req, res) => {
         res.send('api');
     });
 
