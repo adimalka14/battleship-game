@@ -11,7 +11,6 @@ import {
     getSocketID,
     isGameFinished,
     deleteGame,
-    userDisconnect,
     userLeaveLobby,
     userLeaveDuringSetup,
     userLeaveGame,
@@ -19,8 +18,14 @@ import {
 import { GameData, GameState } from '../gameLogic/GameState';
 
 export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
-    setPlayerToSocket(socket.data.playerID as string, socket.id);
+    let playerId = socket.data.playerID as string;
+    let username = socket.data.username as string;
     let gameID: string;
+
+    // todo: player return back to active game
+    setPlayerToSocket(playerId, socket.id);
+
+    socket.emit('availableSettings', gameSettings);
 
     const emitToPlayers = (event: string, getData: (playerId: string) => any) => {
         try {
@@ -65,13 +70,12 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
     };
 
     const events = {
-        clientConnected: () => {
-            socket.emit('availableSettings', gameSettings);
-        },
-
         joinGame: (metadata: any) => {
             try {
-                metadata.playerQuery.id = socket.data.playerID as string;
+                metadata.playerQuery = {
+                    id: socket.data.playerID as string,
+                    username: socket.data.username as string,
+                };
                 const gameData: GameData = joinGame(metadata);
                 gameID = gameData.gameId;
                 socket.join(gameID);
@@ -109,22 +113,6 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
                     id !== playerId &&
                     io.to(socketId).emit('playerLeftDuringSetup', { message: 'Player left during setup' });
             });
-
-            // try {
-            //     const playerId = socket.data.playerID as string;
-            //     const socketId = getSocketID(playerId);
-            //
-            //     socket.leave(gameID);
-            //     emitToPlayers('playerLeftDuringSetup', () => ({
-            //         message: 'Player left during setup',
-            //     }));
-            //     if (socketId) {
-            //         handlePlayerRooms(socketId);
-            //     }
-            //     userLeaveDuringSetup(playerId);
-            // } catch (error) {
-            //     console.error('Error in leaveDuringSetup:', error);
-            // }
         },
 
         leaveGame: () => {
@@ -209,162 +197,3 @@ export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
         socket.on(event, handler);
     });
 }
-
-// import { Server as SocketIOServer, Socket } from 'socket.io';
-// import {
-//     gameSettings,
-//     joinGame,
-//     setPlayerToSocket,
-//     playerReady,
-//     allPlayersReady,
-//     getGameData,
-//     makeMove,
-//     getAllGamePlayers,
-//     getSocketID,
-//     isGameFinished,
-//     deleteGame,
-//     userDisconnect,
-//     userLeaveLobby,
-//     userLeaveDuringSetup,
-//     userLeaveGame,
-// } from '../services/game.service';
-// import { GameData } from '../gameLogic/GameState';
-//
-// export default function gameSocketHandler(io: SocketIOServer, socket: Socket) {
-//     setPlayerToSocket(socket.data.playerID as string, socket.id);
-//
-//     let gameID: string;
-//
-//     socket.on('clientConnected', () => {
-//         socket.emit('availableSettings', gameSettings);
-//     });
-//
-//     socket.on('joinGame', (metadata) => {
-//         metadata.playerQuery.id = socket.data.playerID as string;
-//         const gameData: GameData = joinGame(metadata);
-//         const { gameId } = gameData;
-//         gameID = gameId;
-//         socket.join(gameId);
-//         io.to(gameId).emit('playerJoined', gameData);
-//     });
-//
-//     socket.on('LeaveLobby', () => {
-//         const playerId = socket.data.playerID as string;
-//         userLeaveLobby(playerId);
-//         io.to(gameID).emit('playerLeftLobby', getGameData(gameID));
-//     });
-//
-//     socket.on('leaveDuringSetup', () => {
-//         const playerId = socket.data.playerID as string;
-//         const playersIds: string[] = getAllGamePlayers(gameID);
-//
-//         userLeaveDuringSetup(playerId);
-//
-//         playersIds.forEach((id) => {
-//             const socketId = getSocketID(id);
-//             const playerSocket = socketId ? io.sockets.sockets.get(socketId) : undefined;
-//             playerSocket?.rooms.forEach((room) => {
-//                 if (room !== socketId) {
-//                     playerSocket?.leave(room);
-//                 }
-//             });
-//
-//             socketId &&
-//                 id !== playerId &&
-//                 io.to(socketId).emit('playerLeftDuringSetup', { message: 'Player left during setup' });
-//         });
-//     });
-//
-//     socket.on('leaveGame', () => {
-//         try {
-//             const playerId = socket.data.playerID as string;
-//
-//             userLeaveGame(playerId);
-//             socket.leave(gameID);
-//
-//             const playersIds: string[] = getAllGamePlayers(gameID);
-//             const gameFinished = isGameFinished(gameID);
-//
-//             playersIds.forEach((playerId) => {
-//                 const socketId = getSocketID(playerId);
-//                 const gameData = getGameData(gameID, playerId);
-//                 if (gameFinished) {
-//                     socketId && io.to(socketId).emit('gameFinished', { gameData });
-//                 } else {
-//                     socketId && io.to(socketId).emit('updateBoard', { gameData });
-//                 }
-//             });
-//
-//             if (gameFinished) {
-//                 deleteGame(gameID);
-//             }
-//
-//             gameID = '';
-//         } catch (error: unknown) {
-//             if (error instanceof Error) {
-//                 console.error('Error leaving game:', error.message);
-//             }
-//         }
-//     });
-//
-//     socket.on('playerReady', (data: any) => {
-//         // todo: check validations before emit
-//         const playerId = socket.data.playerID as string;
-//         playerReady(playerId, data);
-//         const { allReady, readyCount } = allPlayersReady(gameID);
-//         if (allReady) {
-//             const playersIds: string[] = getAllGamePlayers(gameID);
-//             playersIds.forEach((playerId) => {
-//                 const socketId = getSocketID(playerId);
-//                 const gameData = getGameData(gameID, playerId);
-//
-//                 socketId && io.to(socketId).emit('allPlayersReady', { gameData });
-//             });
-//         } else {
-//             io.to(gameID).emit('playerReady', readyCount);
-//         }
-//     });
-//
-//     socket.on('getGameData', () => {
-//         const gameData = getGameData(gameID, socket.data.playerID as string);
-//
-//         socket.emit('updateBoard', { gameData });
-//     });
-//
-//     socket.on('playerShoot', (data) => {
-//         try {
-//             const playerId = socket.data.playerID as string;
-//             const attackResult = makeMove(gameID, playerId, data.playerBeingAttacked, data.position);
-//             const playersIds: string[] = getAllGamePlayers(gameID);
-//             const gameFinished = isGameFinished(gameID);
-//
-//             playersIds.forEach((playerId) => {
-//                 const socketId = getSocketID(playerId);
-//                 const gameData = getGameData(gameID, playerId);
-//                 if (gameFinished) {
-//                     socketId && io.to(socketId).emit('gameFinished', { gameData, attackResult });
-//                 } else {
-//                     socketId && io.to(socketId).emit('updateBoard', { gameData, attackResult });
-//                 }
-//             });
-//
-//             if (gameFinished) {
-//                 deleteGame(gameID);
-//             }
-//         } catch (e) {
-//             console.error(e);
-//         }
-//     });
-//
-//     socket.on('disconnect', () => {
-//         const playerId = socket.data.playerID as string;
-//         userDisconnect(playerId);
-//         io.to(gameID).emit('playerLeft', getGameData(gameID));
-//     });
-// }
-//
-// function getCookieValue(cookie: string | undefined, key: string): string | undefined {
-//     if (!cookie) return undefined;
-//     const match = cookie.split('; ').find((c) => c.startsWith(`${key}=`));
-//     return match ? match.split('=')[1] : undefined;
-// }
