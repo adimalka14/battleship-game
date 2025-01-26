@@ -1,6 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+
 import { UI_URL } from './utils/env';
+import { initAppRoutes } from './routers';
 
 const app = express();
 
@@ -13,9 +17,9 @@ app.use(
         credentials: true,
     })
 );
+app.use(helmet());
+app.use(cookieParser());
 
-app.use('/', (req, res) => {
-    res.send('api');
-});
+initAppRoutes(app);
 
 export default app;

@@ -22,8 +22,6 @@ export const renderOpponentSelectionScreen = () => {
 const bindEvents = () => {
     $('#player-btn').on('click', () => joinGame(true));
 
-    emitEvent(EVENTS.CLIENT_CONNECTED, {});
-
     onEvent(EVENTS.AVAILABLE_SETTINGS, (data: any) => {
         STORAGE.GAME_CONFIG = data.defaultConfig;
     });

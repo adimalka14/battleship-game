@@ -11,7 +11,7 @@ import { AttackResult } from '../gameLogic/attack/Attack';
 const games = new Map<string, GameEngine>();
 const players = new Map<string, Player>();
 const playerToGameId = new Map<string, string>();
-const tokensToPlayers = new Map<string, string>();
+// const tokensToPlayers = new Map<string, string>();
 const playersToSockets = new Map<string, string>();
 
 const waitingGames = (): GameEngine[] => {
@@ -24,20 +24,19 @@ export const gameSettings = GameSettings;
 export const setPlayerToSocket = (playerId: string, socketId: string) => playersToSockets.set(playerId, socketId);
 export const getSocketID = (playerId: string) => playersToSockets.get(playerId);
 
-export const getPlayerID = (token: string, createIfNotExist = false): string | null => {
-    // if(!token) throw Error('missing token');
-
-    const result = tokensToPlayers.get(token);
-    if (result) return result;
-
-    return createIfNotExist ? createPlayerID(token) : null;
-};
-
-const createPlayerID = (token: string): string => {
-    const playerId = uuid_v4();
-    tokensToPlayers.set(token, playerId);
-    return playerId;
-};
+// export const getPlayerID = (playerId: string, username:string, createIfNotExist = false): string | null => {
+//
+//     //const result = tokensToPlayers.get(token);
+//     //if (result) return result;
+//
+//     return createIfNotExist ? createPlayerID(token) : null;
+// };
+//
+// const createPlayerID = (token: string): string => {
+//     //const playerId = uuid_v4();
+//     //tokensToPlayers.set(token, playerId);
+//     return playerId;
+// };
 
 export const joinGame = (metadata: any): GameData => {
     const { playerQuery, gameConfig } = metadata;
@@ -166,7 +165,7 @@ function getPlayer(playerQuery: any): Player {
         return players.get(id)!;
     }
 
-    const newPlayer = new Player(id, playerQuery.name, false);
+    const newPlayer = new Player(id, playerQuery.username, false);
 
     players.set(id, newPlayer);
 

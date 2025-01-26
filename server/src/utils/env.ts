@@ -8,3 +8,4 @@ expand(config({ path: configPath }));
 
 export const UI_URL = process.env.UI_URL;
 export const PORT = process.env.PORT;
+export const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access-token-secret';
