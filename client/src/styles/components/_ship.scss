@@ -18,7 +18,7 @@
     pointer-events: none;
 
     .ship{
-      opacity: 0.6 !important;
+      opacity: 0.8 !important;
     }
   }
 }
@@ -26,25 +26,25 @@
 .ship {
   //grid-column: span 1;
   //grid-row: span 1;
-  background-color: rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
-  border: none;
-  border-radius: 45%;
+  //background-color: rgba(0, 0, 0, 0.2);
+  //transition: background-color 0.3s ease;
+  //border: none;
+  //border-radius: 45%;
 
 
   @mixin ship($area, $color) {
     &.ship-area-#{$area} {
-     // width: 1fr;
-      background-color: $color;
-      //height: calc($area * 1fr);
 
-      //&[data-direction="horizontal"] {
-      //  grid-column: span auto;
-      //}
-      //
-      //&[data-direction="vertical"] {
-      //  grid-row: span auto;
-      //}
+      &[data-direction="vertical"] {
+          background-image: url("./assets/ships/vertical/ship-#{$area}.png");
+      }
+      &[data-direction="horizontal"] {
+        background-image: url("./assets/ships/horizontal/ship-#{$area}.png");
+      }
+
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
     }
   }
 
