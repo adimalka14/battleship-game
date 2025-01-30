@@ -14,6 +14,7 @@ export function renderGameScreen(data: any) {
 <button id="exit-btn" class="btn"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 <div class="game-board">
     <div class="game-state message"></div>
+    <div class="user-name message"></div>
     <div class="board-container">
         <div class="board-grid">
             <div class="ship-layer game"></div>
@@ -97,11 +98,13 @@ async function flipBoard() {
 function updateGameBoard() {
     if (gameState.player.id === gameState.currentTurn) {
         $('.game-state').text('Your turn');
+        $('.user-name').text(`username : ${gameState.player.name}`);
         $('.cells-layer').html(renderBoard(gameState.enemies[0].board));
         renderShipsOnBoard(convertShipsToUIFormat(gameState?.enemies[0]?.sunkShips));
         attackerEvent();
     } else {
         $('.game-state').text('Wait for opponent turn');
+        $('.user-name').text(`username : ${gameState.enemies[0].name}`);
         $('.cells-layer').html(renderBoard(gameState.player.board));
         renderShipsOnBoard(convertShipsToUIFormat(gameState?.player?.ships));
     }
