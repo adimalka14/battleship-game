@@ -24,15 +24,11 @@ const bindEvents = () => {
         STORAGE.USERNAME = $(`#username`).val() as string;
 
         sendPostRequest('/auth/login', { username: STORAGE.USERNAME })
-            .then(() => {
-                connectSocket();
-                renderOpponentSelectionScreen();
-            })
+            .then(connectSocket)
+            .then(renderOpponentSelectionScreen)
             .catch((e) => console.log(e));
 
-        onEvent('error', (data: any) => {
-            console.log(data);
-        });
+        onEvent('error', (data: any) => {});
     });
 };
 
@@ -50,6 +46,4 @@ async function sendPostRequest(route: string, data: any) {
     if (!response.ok) {
         throw new Error(`Failed to send request ${response.statusText}`);
     }
-
-    console.log(response);
 }
