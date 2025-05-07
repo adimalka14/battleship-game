@@ -93,3 +93,8 @@ npm start       # serves dist & starts the server in prod mode
 ---
 
 ## Front‑End Design & Outcome
+
+### Login
+![login-plan](client/public/plan/login.screen.png)
+![login-result](client/public/result/login-screen.png)
+
