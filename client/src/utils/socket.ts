@@ -9,11 +9,6 @@ const socket = io(SERVER_URL, {
     path: '/socket.io',
 });
 
-// const socket = io(SERVER_URL, {
-//     withCredentials: true,
-//     autoConnect: false,
-// });
-
 export const connectSocket = () => socket.connect();
 
 export const disconnectSocket = () => socket.disconnect();

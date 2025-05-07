@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import { UI_URL } from './utils/env';
 import { initAppRoutes } from './routers';
+import requestIdMiddleware from './middleware/requestId.MW';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(
 );
 app.use(helmet());
 app.use(cookieParser());
+app.use(requestIdMiddleware);
 
 initAppRoutes(app);
 

@@ -8,5 +8,9 @@ export const generateAccessToken = (username: string, id: string) => {
 };
 
 export const verifyAccessToken = (token: string): { username: string; id: string } => {
-    return jwt.verify(token, ACCESS_TOKEN_SECRET) as { username: string; id: string };
+    try {
+        return jwt.verify(token, ACCESS_TOKEN_SECRET) as { username: string; id: string };
+    } catch (error) {
+        throw new Error('Invalid or expired token');
+    }
 };

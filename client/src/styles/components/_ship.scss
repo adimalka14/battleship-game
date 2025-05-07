@@ -24,14 +24,6 @@
 }
 
 .ship {
-  //grid-column: span 1;
-  //grid-row: span 1;
-  //background-color: rgba(0, 0, 0, 0.2);
-  //transition: background-color 0.3s ease;
-  //border: none;
-  //border-radius: 45%;
-
-
   @mixin ship($area, $color) {
     &.ship-area-#{$area} {
 
@@ -59,13 +51,3 @@
     opacity: 0.3;
   }
 }
-
-
-//.ship {
-//  position: absolute !important;
-//  z-index: 10;
-//  box-sizing: border-box;
-
-//
-//
-//}

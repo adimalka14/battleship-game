@@ -28,9 +28,6 @@ const bindEvents = () => {
     });
 
     emitEvent(EVENTS.JOIN_GAME, {
-        // playerQuery: {
-        //     //name: STORAGE.USERNAME,
-        // },
         gameConfig: STORAGE.GAME_CONFIG,
     });
 
