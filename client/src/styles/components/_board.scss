@@ -154,3 +154,18 @@ $board-length: 10;
 .board-row {
   display: contents;
 }
+
+@media screen {
+  @media (max-width: 600px) {
+    .result-screen{
+      .boards-container{
+        flex-direction: column;
+        .board-container {
+          width: min(60vw, 40vh);
+          height: min(60vw, 40vh);
+        }
+      }
+    }
+
+  }
+}
