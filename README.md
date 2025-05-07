@@ -1,7 +1,7 @@
 # Battleship Game 🛳️🎯
 
-**Live demo:** [https://battleship11.netlify.app](https://battleship11.netlify.app)
-**Backend API:** Render‑hosted Node.js WebSocket server.
+- **Live demo:** [https://battleship11.netlify.app](https://battleship11.netlify.app)
+- **Backend API:** Render‑hosted Node.js WebSocket server.
 
 A real‑time, two‑player Battleship game: open the link, share a 6‑digit room code, place your fleet, and sink your friend’s ships — all in the browser.
 
