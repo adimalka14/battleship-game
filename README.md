@@ -98,3 +98,21 @@ npm start       # serves dist & starts the server in prod mode
 ![login-plan](client/public/plan/login.screen.png)
 ![login-result](client/public/result/login-screen.png)
 
+### Choose opponent
+![choose-opponent-plan](client/public/plan/choose-opponent.png)
+![choose-opponent-result](client/public/result/choose-opponent.png)
+
+### Find opponent
+![find-opponent-plan](client/public/plan/find-opponent.png)
+![find-opponent-result](client/public/result/find-opponent.png)
+
+### Setup board
+![setup-board-plan](client/public/plan/setup-board.png)
+![setup-board-result](client/public/result/setup-board.png)
+
+### Game screen
+![game-screen-plan](client/public/plan/game-screen.png)
+![game-screen-result](client/public/result/game-screen.png)
+
+### Game result
+![game-result-result](client/public/result/game-result.png)
