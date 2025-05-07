@@ -37,6 +37,8 @@ A real‑time, two‑player Battleship game: open the link, share a 6‑digit ro
 * **ts‑node‑dev** – auto‑restart for the Node server.
 * **dotenv** – environment variable management.
 * **Husky + lint‑staged** – pre‑commit lint & format.
+* **Winston**: Logging library for error and activity tracking.
+
 
 ### Quality
 
