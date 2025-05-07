@@ -93,15 +93,3 @@ npm start       # serves dist & starts the server in prod mode
 ---
 
 ## Front‑End Design & Outcome
-
-| Screenshot                        | Description                                              |
-| --------------------------------- | -------------------------------------------------------- |
-| ![Lobby](docs/assets/lobby.png)   | **Lobby** – create or join a 6‑digit room.               |
-| ![Setup](docs/assets/setup.png)   | **Setup** – drag ships onto a responsive 10×10 grid.     |
-| ![Battle](docs/assets/battle.png) | **Battle** – turn‑based firing with hit/miss animations. |
-
-**Design goals**
-
-1. **Lightweight** – initial payload < 200 kB gzipped.
-2. **Mobile‑first** – works down to 360×640 screens.
-3. **Accessible** – full keyboard support + ARIA live regions.
